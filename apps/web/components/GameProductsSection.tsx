@@ -4,9 +4,9 @@ import { motion } from 'framer-motion';
 import { Search, Package, Archive, LifeBuoy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import Support from '../app/assets/support.avif'
-import RobScr from '../app/assets/rob-scr.avif'
-import Assets from '../app/assets/game-2.avif'
+import Support from '../app/assets/support.jpg'
+import RobScr from '../app/assets/rob-scr.jpg'
+import Assets from '../app/assets/game-2.jpg'
 import Image from 'next/image';
 import { BlurFade } from './magicui/blur-fade';
 
