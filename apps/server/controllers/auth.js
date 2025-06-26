@@ -333,7 +333,7 @@ export async function signUp(req, res) {
 
         return res.status(200).json({ message: "Successfully Registered! check your email for verify your account.", success: true });
     } catch (err) {
-        console.log(err);
+        console.log(error);
         return res.status(500).json({ error: "Somthing went wrong, try again later!", success: false });
     }
 }
@@ -387,7 +387,7 @@ export async function logIn(req, res) {
         return res.status(200).json({ success: true, token, message: "Login Successful." });
 
     } catch (err) {
-        console.log(err);
+        console.log(error);
         return res.status(500).json({ error: "Somthing went wrong, try again later!", success: false });
     }
 }
@@ -609,7 +609,7 @@ export async function forgotPassChallenge(req, res) {
 
         return res.status(200).json({ message: 'The OTP is sent to your email!', success: true });
     } catch (error) {
-        console.log(err);
+        console.log(error);
         return res.status(500).json({ error: "Somthing went wrong, try again later!", success: false });
     }
 }
@@ -636,7 +636,7 @@ export async function verifyOTP(req, res) {
 
         return res.status(200).json({ message: "OTP matched!", success: true });
     } catch (error) {
-        console.log(err);
+        console.log(error);
         return res.status(500).json({ error: "Somthing went wrong, try again later!", success: false });
     }
 }
@@ -674,7 +674,7 @@ export async function forgotPass(req, res) {
         return res.status(200).json({ message: "Password is changed successfully!", success: true });
 
     } catch (error) {
-        console.log(err);
+        console.log(error);
         return res.status(500).json({ error: "Somthing went wrong, try again later!", success: false });
     }
 }
@@ -698,7 +698,7 @@ export async function verify(req, res) {
 
         return res.status(200).json({ message: "User is successfully verified!", success: true })
     } catch (error) {
-        console.log(err);
+        console.log(error);
         return res.status(500).json({ error: "Somthing went wrong, try again later!", success: false });
     }
 }
