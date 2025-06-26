@@ -9,9 +9,9 @@ const emailConfig = {
     user: process.env.USER,
     pass: process.env.PASS
   },
-  // tls: {
-    // rejectUnauthorized: false
-  // }
+  tls: {
+    rejectUnauthorized: false
+  }
 };
 
 const transporter = nodemailer.createTransport(emailConfig);
