@@ -349,10 +349,10 @@ export async function logIn(req, res) {
         const isRecaptchaValid = await verifyRecaptcha(recaptchaToken);
 
         if (!isRecaptchaValid) {
-            return {
+            return res.status(400).json({
                 success: false,
                 error: 'reCAPTCHA verification failed. Please try again.'
-            };
+            });
         }
 
         const foundUser = await User.findOne({

@@ -26,7 +26,6 @@ const Auth = () => {
   }
 
   return (
-    <>
       <Wrapper>
         <div className="main">
           <div className="info"> 
@@ -40,7 +39,6 @@ const Auth = () => {
           </div>
         </div>
       </Wrapper>
-    </>
   )
 }
 
@@ -117,7 +115,6 @@ const Wrapper = styled.section`
       }
     }
   }
-
 
   @media (max-width: ${({ theme }) => theme.media.tab}) {
     .main {

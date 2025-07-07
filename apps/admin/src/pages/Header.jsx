@@ -19,7 +19,7 @@ const Header = () => {
 const Wrapper = styled.section`
     .nav {
         width: 100%;
-        display: flex;
+        display: flex; 
         flex-direction: row;
         justify-content: space-between;
         background-color: #434ce6;

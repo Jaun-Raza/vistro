@@ -22,33 +22,35 @@ export default function CartPage() {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('stripe');
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
-  const subtotal = items.reduce((sum, item) => sum + item.price, 0); 
+  const subtotal = items.reduce((sum, item) => sum + item.price, 0);
   const total = subtotal;
 
   const isCartEmpty = items.length === 0;
-  
+
+  const token = Cookies.get('tok_UID');
+
   const handleCheckout = async () => {
     setIsProcessingPayment(true);
-    
+
     try {
-      const tok = Cookies.get('tok_UID');
-        const orderData = {
-          orderId: `order_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-          items: items.map(item => ({
-            id: item.id,
-            name: item.name,
-            price: item.price,
-            licenseType: item.licenseType,
-            bundles: item.bundles || [],
-            imageUrl: item.imageUrl
-          })),
-          subtotal: subtotal,
-          total: total,
-          paymentMethod: 'stripe',
-          status: 'pending',
-          createdAt: new Date().toISOString(),
-          token: tok,
-        };
+      const tok = token;
+      const orderData = {
+        orderId: `order_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        items: items.map(item => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          licenseType: item.licenseType,
+          bundles: item.bundles || [],
+          imageUrl: item.imageUrl
+        })),
+        subtotal: subtotal,
+        total: total,
+        paymentMethod: 'stripe',
+        status: 'pending',
+        createdAt: new Date().toISOString(),
+        token: tok,
+      };
 
       localStorage.setItem('pendingOrder', JSON.stringify(orderData));
 
@@ -60,14 +62,14 @@ export default function CartPage() {
         }));
 
         const result = await checkoutWithStripe(stripeProducts);
-        
+
         if (result.success && result.id) {
           console.log('g')
           await localStorage.setItem('stripeSessionId', result.id);
-          
+
           const { loadStripe } = await import('@stripe/stripe-js');
           const stripe = await loadStripe("pk_test_51RVYaJA5BUAi8xSxIo0EFZ3CZTdROQo6wOuFZiSSkw61MGb9koK206SOCOcor5GymPxZVsXIDkLS2U4vWIfFcQaK00zrEJcBoe");
-          
+
           if (stripe) {
             await stripe.redirectToCheckout({ sessionId: result.id });
           }
@@ -83,7 +85,7 @@ export default function CartPage() {
         }));
 
         const result = await checkoutWithPayPal(paypalProducts);
-        
+
         if (result.success && result.approvalUrl) {
           localStorage.setItem('paypalOrderId', result.orderId || "");
           window.location.href = result.approvalUrl;
@@ -98,6 +100,16 @@ export default function CartPage() {
       setIsProcessingPayment(false);
     }
   };
+
+  if (!token) {
+    return (
+      <div className="max-w-6xl mx-auto p-4 md:p-6 min-h-screen">
+        <div className="text-center py-12 pt-40">
+          <p className="text-2xl text-gray-400">Please log in to view your purchased products.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container h-[100%] mx-auto py-8 px-4 pt-25">
@@ -145,7 +157,7 @@ export default function CartPage() {
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel className='text-lg cursor-pointer'>Cancel</AlertDialogCancel>
-                    <AlertDialogAction 
+                    <AlertDialogAction
                       className="bg-red-500 cursor-pointer hover:bg-red-600 text-lg"
                       onClick={clearCart}
                     >
@@ -155,11 +167,11 @@ export default function CartPage() {
                 </AlertDialogContent>
               </AlertDialog>
             </div>
-            
+
             {items.map((item) => (
               <CartItemCard key={item.id} item={item} onRemove={removeItem} />
             ))}
-            
+
             <div className="mt-8">
               <Link href="/browse">
                 <Button variant="outline" className="flex items-center gap-2 text-lg cursor-pointer">
@@ -169,7 +181,7 @@ export default function CartPage() {
               </Link>
             </div>
           </div>
-          
+
           <div>
             <Card>
               <CardContent className="p-6">
@@ -184,7 +196,7 @@ export default function CartPage() {
                     <span>Total</span>
                     <span>£{total.toFixed(2)}</span>
                   </div>
-                  
+
                   {/* Payment Method Selection */}
                   <div className="mt-6">
                     <h3 className="text-lg font-semibold mb-3">Payment Method</h3>
@@ -202,7 +214,7 @@ export default function CartPage() {
                           <span>Credit/Debit Card</span>
                         </label>
                       </div>
-                      
+
                       <div className="flex items-center space-x-3">
                         <Checkbox
                           id="paypal"
@@ -220,9 +232,9 @@ export default function CartPage() {
                       </div>
                     </div>
                   </div>
-                  
-                  <Button 
-                    className="w-full mt-6 text-lg cursor-pointer" 
+
+                  <Button
+                    className="w-full mt-6 text-lg cursor-pointer"
                     size="lg"
                     onClick={handleCheckout}
                     disabled={isProcessingPayment}
@@ -236,9 +248,8 @@ export default function CartPage() {
                       `Proceed to Checkout with ${selectedPaymentMethod === 'stripe' ? 'Stripe' : 'PayPal'}`
                     )}
                   </Button>
-                  
+
                   <div className="mt-4 text-sm text-gray-500">
-                    <p>Shipping costs calculated at checkout</p>
                     <p>Secure payment powered by {selectedPaymentMethod === 'stripe' ? 'Stripe' : 'PayPal'}</p>
                   </div>
                 </div>
@@ -251,19 +262,19 @@ export default function CartPage() {
   );
 }
 
-function CartItemCard({ item, onRemove } : { item: { id: string, name: string, tagline: string, price: number, licenseType: string, bundles?: any, imageUrl?: string }, onRemove: (id: string) => void; }) {
+function CartItemCard({ item, onRemove }: { item: { id: string, name: string, tagline: string, price: number, licenseType: string, bundles?: any, imageUrl?: string }, onRemove: (id: string) => void; }) {
   const { id, name, tagline, price, licenseType, bundles = [], imageUrl } = item;
-  
+
   return (
     <Card className="overflow-hidden">
       <CardContent className="p-0 h-hit-content">
         <div className="flex flex-col sm:flex-row">
           <div className="relative w-full sm:w-42 h-42 m-auto bg-gray-100">
             {imageUrl ? (
-              <Image 
-                src={imageUrl} 
-                alt={name} 
-                fill 
+              <Image
+                src={imageUrl}
+                alt={name}
+                fill
                 className="object-cover rounded-lg"
               />
             ) : (
@@ -273,7 +284,7 @@ function CartItemCard({ item, onRemove } : { item: { id: string, name: string, t
             )}
 
           </div>
-          
+
           <div className="px-4 py-2 flex-1">
             <div className="flex justify-between">
               <div>
@@ -283,15 +294,15 @@ function CartItemCard({ item, onRemove } : { item: { id: string, name: string, t
                   <span className="text-gray-600">License: </span>
                   <span className="font-medium">{licenseType}</span>
                 </p>
-                
+
                 {/* Enhanced Bundles Display */}
                 {bundles.length > 0 && (
                   <div className="mt-2">
                     <span className="text-lg text-gray-600 block mb-1">Bundles:</span>
                     <div className="flex flex-wrap gap-1">
                       {bundles.map((bundle: any, index: any) => (
-                        <Badge 
-                          key={index} 
+                        <Badge
+                          key={index}
                           variant="secondary"
                           className="flex items-center gap-1 text-sm"
                         >
@@ -303,20 +314,20 @@ function CartItemCard({ item, onRemove } : { item: { id: string, name: string, t
                   </div>
                 )}
               </div>
-              
+
               <div className="text-right flex flex-col justify-between">
                 <p className="font-semibold text-lg">£{price.toFixed(2)}</p>
-                <Button 
-                variant="ghost" 
-                size="sm" 
-                className="text-red-500 text-lg cursor-pointer hover:text-red-700 hover:bg-red-50"
-                onClick={() => onRemove(id)}
-              >
-                <Trash2 className="h-4 w-4 mr-1" /> Remove
-              </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-red-500 text-lg cursor-pointer hover:text-red-700 hover:bg-red-50"
+                  onClick={() => onRemove(id)}
+                >
+                  <Trash2 className="h-4 w-4 mr-1" /> Remove
+                </Button>
               </div>
             </div>
-            
+
           </div>
         </div>
       </CardContent>

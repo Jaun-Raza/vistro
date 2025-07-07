@@ -94,7 +94,6 @@ export default function FailureContent(): JSX.Element {
         </Card>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/checkout"><Button className="w-full sm:w-auto"><ArrowLeft className="h-4 w-4 mr-2" />Try Again</Button></Link>
           <Link href="/cart"><Button variant="outline" className="w-full sm:w-auto">Back to Cart</Button></Link>
           <Link href="/"><Button variant="outline" className="w-full sm:w-auto"><Home className="h-4 w-4 mr-2" />Back to Home</Button></Link>
         </div>

@@ -219,7 +219,7 @@ export async function checkOutWithStripe(req, res) {
             mode: "payment",
             allow_promotion_codes: true,
             success_url: `${process.env.SUCCESS_URL}success?payment=stripe`,
-            cancel_url: `${process.env.CANCEL_URL}failed?payment=stripe`,
+            cancel_url: `${process.env.CANCEL_URL}failure?payment=stripe`,
         });
 
         console.log("Stripe Session Created:", session.id);
@@ -400,7 +400,7 @@ export async function createPayPalOrder(req, res) {
             ],
             application_context: {
                 return_url: `${process.env.SUCCESS_URL}success?payment=paypal`,
-                cancel_url: `${process.env.CANCEL_URL}failed?payment=paypal`,
+                cancel_url: `${process.env.CANCEL_URL}failure?payment=paypal`,
                 shipping_preference: 'NO_SHIPPING',
                 user_action: 'PAY_NOW',
                 brand_name: 'Vistro'

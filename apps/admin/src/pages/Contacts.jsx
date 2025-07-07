@@ -109,7 +109,8 @@ height: 100vh;
   }
 
   .main {
-    width: 100%;height: 100vh;
+    width: 100%;
+    height: 100vh;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
