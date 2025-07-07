@@ -104,7 +104,7 @@ export default function CartPage() {
   return (
     !token ? <><div className="max-w-6xl mx-auto p-4 md:p-6 min-h-screen">
       <div className="text-center py-12 pt-40">
-        <p className="text-2xl text-gray-400">Please log in to view your purchased products.</p>
+        <p className="text-2xl text-gray-400">Please log in to view your cart.</p>
       </div>
     </div></> : <>
       <div className="container h-[100%] mx-auto py-8 px-4 pt-25">
