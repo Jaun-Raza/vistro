@@ -11,6 +11,7 @@ import { signToken } from '../middlewares/authMiddleware.js';
 const TOKEN_EXPIRATION_DAYS = 30;
 
 const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY;
+const RECAPTCHA_HOST = process.env.RECAPTCHA_HOST;
 
 async function verifyRecaptcha(token) {
     try {
@@ -28,7 +29,7 @@ async function verifyRecaptcha(token) {
         const data = response.data;
 
         if (data.success) {
-            if (data.hostname !== 'localhost') {
+            if (data.hostname !== RECAPTCHA_HOST) {
                 console.warn('reCAPTCHA domain mismatch:', data.hostname);
                 return false;
             }
