@@ -15,6 +15,7 @@ import { checkoutWithStripe } from '../services/product';
 import { checkoutWithPayPal } from '../services/product';
 import Cookies from 'js-cookie';
 
+const PUBLIC_SECRET_KEY = process.env.NEXT_PUBLIC_SECRET_KEY;
 
 export default function CartPage() {
   const { state, removeItem, clearCart } = useCart();
@@ -64,11 +65,10 @@ export default function CartPage() {
         const result = await checkoutWithStripe(stripeProducts);
 
         if (result.success && result.id) {
-          console.log('g')
           await localStorage.setItem('stripeSessionId', result.id);
 
           const { loadStripe } = await import('@stripe/stripe-js');
-          const stripe = await loadStripe("pk_test_51RVYaJA5BUAi8xSxIo0EFZ3CZTdROQo6wOuFZiSSkw61MGb9koK206SOCOcor5GymPxZVsXIDkLS2U4vWIfFcQaK00zrEJcBoe");
+          const stripe = await loadStripe(PUBLIC_SECRET_KEY || "");
 
           if (stripe) {
             await stripe.redirectToCheckout({ sessionId: result.id });
@@ -101,164 +101,160 @@ export default function CartPage() {
     }
   };
 
-  if (!token) {
-    return (
-      <div className="max-w-6xl mx-auto p-4 md:p-6 min-h-screen">
-        <div className="text-center py-12 pt-40">
-          <p className="text-2xl text-gray-400">Please log in to view your purchased products.</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="container h-[100%] mx-auto py-8 px-4 pt-25">
-      <h1 className="text-4xl font-bold mb-8 flex items-center gap-2 text-white">
-        <ShoppingCart className="h-8 w-8" />
-        Your Cart
-      </h1>
+    !token ? <><div className="max-w-6xl mx-auto p-4 md:p-6 min-h-screen">
+      <div className="text-center py-12 pt-40">
+        <p className="text-2xl text-gray-400">Please log in to view your purchased products.</p>
+      </div>
+    </div></> : <>
+      <div className="container h-[100%] mx-auto py-8 px-4 pt-25">
+        <h1 className="text-4xl font-bold mb-8 flex items-center gap-2 text-white">
+          <ShoppingCart className="h-8 w-8" />
+          Your Cart
+        </h1>
 
-      {isLoading ? (
-        <div className="text-center py-16">
-          <div className="animate-pulse space-y-4">
-            <div className="h-8 bg-gray-200 rounded w-1/3 mx-auto"></div>
-            <div className="h-32 bg-gray-200 rounded-md max-w-md mx-auto"></div>
-            <div className="h-32 bg-gray-200 rounded-md max-w-md mx-auto"></div>
+        {isLoading ? (
+          <div className="text-center py-16">
+            <div className="animate-pulse space-y-4">
+              <div className="h-8 bg-gray-200 rounded w-1/3 mx-auto"></div>
+              <div className="h-32 bg-gray-200 rounded-md max-w-md mx-auto"></div>
+              <div className="h-32 bg-gray-200 rounded-md max-w-md mx-auto"></div>
+            </div>
           </div>
-        </div>
-      ) : isCartEmpty ? (
-        <div className="text-center py-16">
-          <ShoppingBag className="h-16 w-16 mx-auto mb-4 text-gray-400" />
-          <h2 className="text-2xl font-semibold mb-2 text-white">Your cart is empty</h2>
-          <p className="text-gray-400 text-lg mb-6">Looks like you haven't added any items to your cart yet.</p>
-          <Link href="/browse">
-            <Button className="mx-auto text-lg cursor-pointer p-4">Continue Shopping</Button>
-          </Link>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Cart Items Section */}
-          <div className="lg:col-span-2 space-y-4">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl text-white font-semibold">{items.length} {items.length === 1 ? 'Item' : 'Items'}</h2>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="outline" size="sm" className="text-red-500 text-lg cursor-pointer flex gap-1 items-center">
-                    <Trash2 className="h-4 w-4" />
-                    Clear Cart
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle className='text-2xl'>Clear your cart?</AlertDialogTitle>
-                    <AlertDialogDescription className='text-lg'>
-                      This will remove all items from your cart. This action cannot be undone.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel className='text-lg cursor-pointer'>Cancel</AlertDialogCancel>
-                    <AlertDialogAction
-                      className="bg-red-500 cursor-pointer hover:bg-red-600 text-lg"
-                      onClick={clearCart}
-                    >
+        ) : isCartEmpty ? (
+          <div className="text-center py-16">
+            <ShoppingBag className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+            <h2 className="text-2xl font-semibold mb-2 text-white">Your cart is empty</h2>
+            <p className="text-gray-400 text-lg mb-6">Looks like you haven't added any items to your cart yet.</p>
+            <Link href="/browse">
+              <Button className="mx-auto text-lg cursor-pointer p-4">Continue Shopping</Button>
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Cart Items Section */}
+            <div className="lg:col-span-2 space-y-4">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl text-white font-semibold">{items.length} {items.length === 1 ? 'Item' : 'Items'}</h2>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline" size="sm" className="text-red-500 text-lg cursor-pointer flex gap-1 items-center">
+                      <Trash2 className="h-4 w-4" />
                       Clear Cart
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle className='text-2xl'>Clear your cart?</AlertDialogTitle>
+                      <AlertDialogDescription className='text-lg'>
+                        This will remove all items from your cart. This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel className='text-lg cursor-pointer'>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        className="bg-red-500 cursor-pointer hover:bg-red-600 text-lg"
+                        onClick={clearCart}
+                      >
+                        Clear Cart
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+
+              {items.map((item) => (
+                <CartItemCard key={item.id} item={item} onRemove={removeItem} />
+              ))}
+
+              <div className="mt-8">
+                <Link href="/browse">
+                  <Button variant="outline" className="flex items-center gap-2 text-lg cursor-pointer">
+                    <ArrowLeft className="h-4 w-4" />
+                    Continue Shopping
+                  </Button>
+                </Link>
+              </div>
             </div>
 
-            {items.map((item) => (
-              <CartItemCard key={item.id} item={item} onRemove={removeItem} />
-            ))}
+            <div>
+              <Card>
+                <CardContent className="p-6">
+                  <h2 className="text-2xl font-semibold mb-4">Order Summary</h2>
+                  <div className="space-y-4 text-lg">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Subtotal</span>
+                      <span>£{subtotal.toFixed(2)}</span>
+                    </div>
+                    <Separator />
+                    <div className="flex justify-between font-semibold">
+                      <span>Total</span>
+                      <span>£{total.toFixed(2)}</span>
+                    </div>
 
-            <div className="mt-8">
-              <Link href="/browse">
-                <Button variant="outline" className="flex items-center gap-2 text-lg cursor-pointer">
-                  <ArrowLeft className="h-4 w-4" />
-                  Continue Shopping
-                </Button>
-              </Link>
-            </div>
-          </div>
+                    {/* Payment Method Selection */}
+                    <div className="mt-6">
+                      <h3 className="text-lg font-semibold mb-3">Payment Method</h3>
+                      <div className="space-y-3">
+                        <div className="flex items-center space-x-3">
+                          <Checkbox
+                            id="stripe"
+                            checked={selectedPaymentMethod === 'stripe'}
+                            onCheckedChange={(checked) => {
+                              if (checked) setSelectedPaymentMethod('stripe');
+                            }}
+                          />
+                          <label htmlFor="stripe" className="flex items-center space-x-2 cursor-pointer">
+                            <CreditCard className="h-5 w-5 text-blue-600" />
+                            <span>Credit/Debit Card</span>
+                          </label>
+                        </div>
 
-          <div>
-            <Card>
-              <CardContent className="p-6">
-                <h2 className="text-2xl font-semibold mb-4">Order Summary</h2>
-                <div className="space-y-4 text-lg">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Subtotal</span>
-                    <span>£{subtotal.toFixed(2)}</span>
-                  </div>
-                  <Separator />
-                  <div className="flex justify-between font-semibold">
-                    <span>Total</span>
-                    <span>£{total.toFixed(2)}</span>
-                  </div>
-
-                  {/* Payment Method Selection */}
-                  <div className="mt-6">
-                    <h3 className="text-lg font-semibold mb-3">Payment Method</h3>
-                    <div className="space-y-3">
-                      <div className="flex items-center space-x-3">
-                        <Checkbox
-                          id="stripe"
-                          checked={selectedPaymentMethod === 'stripe'}
-                          onCheckedChange={(checked) => {
-                            if (checked) setSelectedPaymentMethod('stripe');
-                          }}
-                        />
-                        <label htmlFor="stripe" className="flex items-center space-x-2 cursor-pointer">
-                          <CreditCard className="h-5 w-5 text-blue-600" />
-                          <span>Credit/Debit Card</span>
-                        </label>
-                      </div>
-
-                      <div className="flex items-center space-x-3">
-                        <Checkbox
-                          id="paypal"
-                          checked={selectedPaymentMethod === 'paypal'}
-                          onCheckedChange={(checked) => {
-                            if (checked) setSelectedPaymentMethod('paypal');
-                          }}
-                        />
-                        <label htmlFor="paypal" className="flex items-center space-x-2 cursor-pointer">
-                          <div className="w-5 h-5 bg-blue-500 rounded text-white text-xs flex items-center justify-center font-bold">
-                            P
-                          </div>
-                          <span>PayPal</span>
-                        </label>
+                        <div className="flex items-center space-x-3">
+                          <Checkbox
+                            id="paypal"
+                            checked={selectedPaymentMethod === 'paypal'}
+                            onCheckedChange={(checked) => {
+                              if (checked) setSelectedPaymentMethod('paypal');
+                            }}
+                          />
+                          <label htmlFor="paypal" className="flex items-center space-x-2 cursor-pointer">
+                            <div className="w-5 h-5 bg-blue-500 rounded text-white text-xs flex items-center justify-center font-bold">
+                              P
+                            </div>
+                            <span>PayPal</span>
+                          </label>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <Button
-                    className="w-full mt-6 text-lg cursor-pointer"
-                    size="lg"
-                    onClick={handleCheckout}
-                    disabled={isProcessingPayment}
-                  >
-                    {isProcessingPayment ? (
-                      <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                        Processing...
-                      </>
-                    ) : (
-                      `Proceed to Checkout with ${selectedPaymentMethod === 'stripe' ? 'Stripe' : 'PayPal'}`
-                    )}
-                  </Button>
+                    <Button
+                      className="w-full mt-6 text-lg cursor-pointer"
+                      size="lg"
+                      onClick={handleCheckout}
+                      disabled={isProcessingPayment}
+                    >
+                      {isProcessingPayment ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Processing...
+                        </>
+                      ) : (
+                        `Proceed to Checkout with ${selectedPaymentMethod === 'stripe' ? 'Stripe' : 'PayPal'}`
+                      )}
+                    </Button>
 
-                  <div className="mt-4 text-sm text-gray-500">
-                    <p>Secure payment powered by {selectedPaymentMethod === 'stripe' ? 'Stripe' : 'PayPal'}</p>
+                    <div className="mt-4 text-sm text-gray-500">
+                      <p>Secure payment powered by {selectedPaymentMethod === 'stripe' ? 'Stripe' : 'PayPal'}</p>
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 }
 
