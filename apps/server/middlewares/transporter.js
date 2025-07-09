@@ -1,6 +1,9 @@
 import nodemailer from 'nodemailer';
 import 'dotenv/config';
 
+console.log(process.env.USER)
+console.log(process.env.PASS)
+
 const emailConfig = {
   host: 'smtp.zeptomail.eu',
   port: 587,
