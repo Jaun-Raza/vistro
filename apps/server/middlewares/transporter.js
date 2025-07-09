@@ -2,9 +2,8 @@ import nodemailer from 'nodemailer';
 import 'dotenv/config';
 
 const emailConfig = {
-  host: 'smtp.zoho.eu',
-  port: 465,
-  secure: true,
+  host: 'smtp.zeptomail.eu',
+  port: 587,
   auth: {
     user: process.env.USER,
     pass: process.env.PASS

@@ -222,7 +222,6 @@ export async function checkOutWithStripe(req, res) {
             cancel_url: `${process.env.CANCEL_URL}failure?payment=stripe`,
         });
 
-        console.log("Stripe Session Created:", session.id);
         return res.status(200).json({ id: session.id, success: true });
     } catch (error) {
         console.error("Stripe Error:", error);
@@ -423,8 +422,6 @@ export async function createPayPalOrder(req, res) {
         const order = response.data;
         const approvalUrl = order.links.find((link) => link.rel === 'approve')?.href;
 
-        console.log("PayPal Order Created:", order.id);
-
         return res.status(200).json({
             success: true,
             orderId: order.id,
@@ -512,7 +509,7 @@ export async function placeOrder(req, res) {
         user.save();
         
         const message = {
-            from: "'Vistro' <no-reply@vistro.com>",
+            from: "'Vistro' <noreply@vistro.shop>",
             to: user.email,
             subject: 'Thanks For Ordering From Vistro',
             html: `

@@ -88,7 +88,7 @@ export async function signUp(req, res) {
         if (isUserNameExisted) return res.status(409).json({ error: 'Username is already taken', success: false });
 
         const message = {
-            from: "'Vistro' <no-reply@vistro.com>",
+            from: "'Vistro' <noreply@vistro.shop>",
             to: email,
             subject: 'SignUp Verification',
             html: `
@@ -413,7 +413,7 @@ export async function forgotPassChallenge(req, res) {
         foundUser.save();
 
         const message = {
-            from: "'Vistro' <no-reply@vistro.com>",
+            from: "'Vistro' <noreply@vistro.shop>",
             to: email,
             subject: 'OTP For Password Recovery',
             html: `
