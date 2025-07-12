@@ -146,7 +146,6 @@ export default function Page() {
     title: product.productDetails.name,
     subtitle: product.productDetails.tagline,
     price: product.licenses.personal,
-    originalPrice: (parseFloat(product?.licenses?.personal) + 5).toFixed(2),
     images: product.productDetails.images,
     tags: product.productDetails.tags,
     badgeText: product.productDetails.caption,

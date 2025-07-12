@@ -80,8 +80,14 @@ export function InfoPopup({
 }) {
   if (!isOpen) return null;
 
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
-    <Overlay>
+    <Overlay onClick={handleOverlayClick}>
       <PopupContainer>
         <Header>
           <Title>{title}</Title>

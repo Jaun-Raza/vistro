@@ -4,7 +4,6 @@ import { useState, useEffect, JSX } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ShoppingCart, ChevronDown, ChevronUp } from 'lucide-react';
@@ -103,16 +102,16 @@ export default function ProductDetailPage(): JSX.Element {
             try {
                 setLoading(true);
                 setError(null);
-                const response: ApiResponse  = await getSingleProduct(productId);
+                const response: ApiResponse = await getSingleProduct(productId);
 
                 if (response.success && response.product) {
                     const productData = response.product;
                     setProduct(productData);
-                    
+
                     // Set default license type based on availability
                     const hasPersonalLicense = Boolean(productData.licenses.personal && parseFloat(productData.licenses.personal) > 0);
                     const hasCommercialLicense = Boolean(productData.licenses.commercial && parseFloat(productData.licenses.commercial) > 0);
-                    
+
                     if (hasPersonalLicense) {
                         setLicenseType("personal");
                     } else if (hasCommercialLicense) {
@@ -295,6 +294,11 @@ export default function ProductDetailPage(): JSX.Element {
 
     return (
         <div className="container min-h-screen pt-30 mx-auto py-8 px-4">
+            <div className="flex items-center space-x-2 text-3xl px-10 m-10 relative z-10">
+                <a href="/browse" className="text-white hover:text-gray-700 font-medium">BROWSE</a>
+                <span className="text-gray-400">/</span>
+                <a href={`/product/${product?.productId}`} className="text-white uppercase font-medium">{product?.productDetails?.name}</a>
+            </div>
             <ToastContainer position="top-right" />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -310,9 +314,9 @@ export default function ProductDetailPage(): JSX.Element {
                                     className={`w-16 h-16 cursor-pointer border-2 ${selectedImage === index ? 'border-blue-500' : 'border-gray-200'}`}
                                     onClick={() => setSelectedImage(index)}
                                 >
-                                    <Image 
-                                        src={img} 
-                                        alt={`Product thumbnail ${index + 1}`} 
+                                    <Image
+                                        src={img}
+                                        alt={`Product thumbnail ${index + 1}`}
                                         className="w-full h-full object-cover"
                                         width={64}
                                         height={64}
@@ -349,9 +353,9 @@ export default function ProductDetailPage(): JSX.Element {
                                             <div className="flex flex-col">
                                                 <div className="flex items-start gap-4">
                                                     {bundle.image && (
-                                                        <Image 
-                                                            src={bundle.image} 
-                                                            alt={bundle.name} 
+                                                        <Image
+                                                            src={bundle.image}
+                                                            alt={bundle.name}
                                                             className="w-16 h-16 object-cover rounded"
                                                             width={64}
                                                             height={64}

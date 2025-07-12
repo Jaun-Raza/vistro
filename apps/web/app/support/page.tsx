@@ -399,28 +399,8 @@ export default function Page() {
           </p>
         </div>
 
-        {/* Additional Contact Information */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-indigo-100 text-indigo-700 mb-4">
-              <a
-                href="https://discord.gg/yzDa8t9Tns"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-600 hover:text-black transition"
-              >
-                <Image
-                  src={Discord}
-                  alt="Company Logo"
-                  width={20}
-                />
-              </a>
-            </div>
-            <h3 className="text-xl font-medium text-slate-900 mb-2">Support Server</h3>
-            <p className="text-slate-600">Join Our Support Server</p>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
+        <div className="flex justify-center mb-12">
+          <div className="bg-white p-6 rounded-lg shadow-md text-center px-20">
             <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-indigo-100 text-indigo-700 mb-4">
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />

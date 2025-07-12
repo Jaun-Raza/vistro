@@ -72,7 +72,7 @@ export default function RegisterPage() {
   const recaptchaToken = useRef<string>("");
   const recaptchaContainerRef = useRef<HTMLDivElement>(null);
 
-  const RECAPTCHA_SITE_KEY = "6LcKQz8rAAAAAEek98Cr-JG99Xzxkjb9ma8mNxtu";
+  const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_REACAPTCHA_SITE_KEY || "";
 
   useEffect(() => {
     // Only attempt to load and render reCAPTCHA when on step 3
@@ -131,7 +131,6 @@ export default function RegisterPage() {
     }
   };
 
-  // List of countries (with UK at the top)
   const countries = [
     "United Kingdom", "United States", "Canada", "Australia",
     "Germany", "France", "Japan", "Brazil", "India", "China",
@@ -139,10 +138,8 @@ export default function RegisterPage() {
     "Pakistan"
   ];
 
-  // Generate day options 1-31
   const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
 
-  // Month options
   const months = [
     { value: "1", label: "January" },
     { value: "2", label: "February" },
@@ -466,6 +463,12 @@ export default function RegisterPage() {
                 Continue
               </Button>
             </CardFooter>
+            <div className="text-center text-sm pt-2">
+              Already have an account?{" "}
+              <a href="/auth/login" className="text-indigo-600 hover:underline">
+                Log in
+              </a>
+            </div>
           </>
         );
 
@@ -683,15 +686,12 @@ export default function RegisterPage() {
                     }
                   />
                   <Label htmlFor="agreeToTerms" className="text-sm">
-                    I agree to the{" "}
-                    <a href="/terms" className="text-indigo-600 hover:underline">
-                      Terms of Service
-                    </a>{" "}
-                    and{" "}
-                    <a href="/privacy" className="text-indigo-600 hover:underline">
-                      Privacy Policy
-                    </a>
+                    I agree to the
+                    Terms of Service
+                    and
+                    Privacy Policy
                   </Label>
+
                 </div>
 
                 {error && <p className="text-sm text-red-500">{error}</p>}
@@ -718,12 +718,7 @@ export default function RegisterPage() {
                   </Button>
                 </div>
 
-                <div className="text-center text-sm pt-2">
-                  Already have an account?{" "}
-                  <a href="/auth/login" className="text-indigo-600 hover:underline">
-                    Log in
-                  </a>
-                </div>
+
               </form>
             </CardContent>
           </>

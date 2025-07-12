@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import Loader from '../components/Loader';
 import ReactMarkdown from 'react-markdown';
 import { useAddBundleToProductMutation, useAddImageToProductMutation, useAddProductMutation, useEditProductMutation, useProductsDataQuery, useRemoveBundleToProductMutation, useRemoveImageToProductMutation, useRemoveProductMutation, useToggleVisibleFuncMutation } from '../RTK/ApiRequests.js';
-import ConfirmationAlert from '../components/ConfirmationAlert';
 
 const Products = () => {
 
@@ -558,7 +557,6 @@ const Products = () => {
         )}
       </div>
 
-      {/* Product Details Popup */}
       {showPopup && (
         <ProductInfoPopup
           product={productData}
@@ -569,9 +567,8 @@ const Products = () => {
         />
       )}
 
-      {/* Add Product Form */}
       {showAddForm && (
-        <FormPopup title="Add New Product">
+        <FormPopup title="Add New Product" setShowAddForm={setShowAddForm} setShowEditForm={setShowEditForm} setShowImageUploadForm={setShowImageUploadForm} setShowBundleForm={setShowBundleForm}>
           <form onSubmit={handleAddProduct}>
             <div className="form-group">
               <label>Name</label>
@@ -594,6 +591,7 @@ const Products = () => {
             <div className="form-group">
               <label>Caption</label>
               <select onChange={(e) => setNewProduct({ ...newProduct, caption: e.target.value })}>
+                <option value="On Sale" selected>Product</option>
                 <option value="On Sale" selected>On Sale</option>
                 <option value="Featured" selected>Featured</option>
               </select>
@@ -708,7 +706,7 @@ const Products = () => {
       )}
 
       {showEditForm && (
-        <FormPopup title="Edit New Product">
+        <FormPopup title="Edit New Product" setShowAddForm={setShowAddForm} setShowEditForm={setShowEditForm} setShowImageUploadForm={setShowImageUploadForm} setShowBundleForm={setShowBundleForm}>
           <form onSubmit={editProductFunc}>
             <div className="form-group">
               <label>Name</label>
@@ -840,7 +838,7 @@ const Products = () => {
 
       {/* Add Bundle Form */}
       {showBundleForm && (
-        <FormPopup title="Add New Bundle">
+        <FormPopup title="Add New Bundle" setShowAddForm={setShowAddForm} setShowEditForm={setShowEditForm} setShowImageUploadForm={setShowImageUploadForm} setShowBundleForm={setShowBundleForm}>
           <form onSubmit={handleAddBundle}>
             <div className="form-group">
               <label>Bundle Name</label>
@@ -969,7 +967,7 @@ const Products = () => {
 
       {/* Add Image Form */}
       {showImageUploadForm && (
-        <FormPopup title="Add Product Image">
+        <FormPopup title="Add Product Image" setShowAddForm={setShowAddForm} setShowEditForm={setShowEditForm} setShowImageUploadForm={setShowImageUploadForm} setShowBundleForm={setShowBundleForm}>
           <div className="form-group">
             <div className="image-source-options">
               <div>
@@ -1073,8 +1071,14 @@ const Products = () => {
 const ProductInfoPopup = ({ product, isOpen, onClose, removeImage, removeBundle }) => {
   if (!isOpen) return null;
 
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
-    <PopupOverlay>
+    <PopupOverlay onClick={handleOverlayClick}>
       <PopupContent>
         <PopupHeader>
           <h2>{product?.productDetails?.name}</h2>
@@ -1195,10 +1199,19 @@ const ProductInfoPopup = ({ product, isOpen, onClose, removeImage, removeBundle 
   );
 };
 
-// Form Popup Component
-const FormPopup = ({ title, children }) => {
+const FormPopup = ({ title, children, setShowAddForm, setShowEditForm, setShowImageUploadForm, setShowBundleForm }) => {
+
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      setShowAddForm(false);
+      setShowEditForm(false);
+      setShowImageUploadForm(false);
+      setShowBundleForm(false);
+    }
+  };
+
   return (
-    <PopupOverlay>
+    <PopupOverlay onClick={handleOverlayClick}>
       <FormPopupContent>
         <PopupHeader>
           <h2>{title}</h2>

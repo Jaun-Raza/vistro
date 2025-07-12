@@ -59,7 +59,7 @@ export default function LoginPage() {
   
   const recaptchaToken = useRef<string>("");
   
-  const RECAPTCHA_SITE_KEY = "6LcKQz8rAAAAAEek98Cr-JG99Xzxkjb9ma8mNxtu";
+  const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_REACAPTCHA_SITE_KEY || "";
 
   useEffect(() => {
     const script = document.createElement("script");

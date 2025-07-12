@@ -25,7 +25,8 @@ const productSchema = new mongoose.Schema({
         },
         caption: {
             type: String,
-            required: true
+            required: true,
+            default: "Product"
         },
         download: {
             type: String,
@@ -50,7 +51,7 @@ const productSchema = new mongoose.Schema({
     bundlesCommercial: [Object],
     isVisible: {
         type: Boolean,
-        default: true
+        default: false
     }
 }, { timestamps: true });
 

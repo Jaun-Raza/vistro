@@ -8,7 +8,6 @@ interface ProductProps {
   title: string;
   subtitle?: string;
   price: string;
-  originalPrice?: string;
   currency?: string;
   images: string[];
   tags?: string[];
@@ -20,7 +19,6 @@ const ProductCard = ({
   title,
   subtitle,
   price,
-  originalPrice,
   currency = "£",
   images,
   tags = [],
@@ -103,11 +101,6 @@ const ProductCard = ({
           <span className="text-xl font-bold text-blue-600">
             {currency}{price}
           </span>
-          {originalPrice && (
-            <span className="text-sm line-through text-gray-500">
-              {currency}{originalPrice}
-            </span>
-          )}
         </div>
       </CardFooter>
     </Card>
