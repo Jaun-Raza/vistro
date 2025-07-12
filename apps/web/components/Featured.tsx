@@ -186,7 +186,6 @@ const Featured: React.FC = () => {
                     title={product.title}
                     subtitle={product.subtitle}
                     price={product?.licenses?.personal}
-                    originalPrice={(parseFloat(product.licenses.personal) + 5).toFixed(2).toString()}
                     images={product.images || [""]}
                     tags={product.tags}
                     badgeText={product.badgeText}
