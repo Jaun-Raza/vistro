@@ -377,11 +377,11 @@ export async function createPayPalOrder(req, res) {
             purchase_units: [
                 {
                     amount: {
-                        currency_code: 'USD',
+                        currency_code: 'gbp',
                         value: totalAmount.toFixed(2),
                         breakdown: {
                             item_total: {
-                                currency_code: 'USD',
+                                currency_code: 'gbp',
                                 value: subtotal.toFixed(2)
                             },
                         }
@@ -390,7 +390,7 @@ export async function createPayPalOrder(req, res) {
                         name: product.name,
                         description: product.description || '',
                         unit_amount: {
-                            currency_code: 'USD',
+                            currency_code: 'gbp',
                             value: product.price.toFixed(2)
                         },
                         quantity: (product.quantity || 1).toString()
