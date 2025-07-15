@@ -388,7 +388,7 @@ export async function logIn(req, res) {
         return res.status(200).json({ success: true, token, message: "Login Successful." });
 
     } catch (err) {
-        console.log(error);
+        console.log(err);
         return res.status(500).json({ error: "Somthing went wrong, try again later!", success: false });
     }
 }

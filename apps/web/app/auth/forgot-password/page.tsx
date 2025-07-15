@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { forgotPass, forgotPassChallenge, verifyOTP } from "app/services/auth";
 import { Loader2, Mail, X } from "lucide-react";
 
 export default function Page() {
@@ -185,12 +186,7 @@ export default function Page() {
     setLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Simulate success response
-      const response = { success: true };
-      
+      const response = await forgotPassChallenge(formData.email);
       if (response.success) {
         setSuccess("Recovery code sent to your email");
         setLoading(false);
@@ -203,7 +199,7 @@ export default function Page() {
           setStep(2);
         }, 5000);
       } else {
-        setError("Challenge failed. Try again later.");
+        setError(response.error || "Challenge failed. Try again later.");
         setLoading(false);
       }
 
@@ -221,17 +217,15 @@ export default function Page() {
 
     try {
       const otpValue = formData.otp.join("");
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const response = { success: true };
+
+      const response = await verifyOTP(otpValue, formData.email);
 
       if (response.success) {
         setSuccess("Code verified successfully");
         setLoading(false);
         setStep(3);
       } else {
-        setError("Verification failed. Try again later.");
+        setError(response.error || "Verification failed. Try again later.");
         setLoading(false);
       }
     } catch (err) {
@@ -248,10 +242,8 @@ export default function Page() {
 
     try {
       const otpValue = formData.otp.join("");
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const response = { success: true };
+
+      const response = await forgotPass(formData.email, otpValue, formData.password);
 
       if (response.success) {
         setSuccess("Password reset successfully! You can now login with your new password.");
@@ -261,7 +253,7 @@ export default function Page() {
           window.location.href='/auth/login'
         }, 3000)
       } else {
-        setError("Password reset failed. Try again later.");
+        setError(response.error || "Password reset failed. Try again later.");
         setLoading(false);
       }
 
@@ -285,7 +277,7 @@ export default function Page() {
 
   // Email Popup Component
   const EmailPopup = () => (
-    <div className="fixed inset-0 bg-black/80 bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center">
