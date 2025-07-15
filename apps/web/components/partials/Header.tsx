@@ -28,7 +28,9 @@ export default function Header() {
       <nav className="mx-auto my-4 max-w-8xl px-4">
         <div className="flex items-center justify-between rounded-full bg-white backdrop-blur-md px-6 py-4 shadow-md transition-all">
           <div className="flex items-center">
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-gray-900" onClick={() => {
+              window.location.href='/'
+            }}>
               Vistro.Shop
             </h2>
           </div>

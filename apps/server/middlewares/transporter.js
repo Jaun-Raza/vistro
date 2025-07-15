@@ -5,7 +5,7 @@ const emailConfig = {
   host: 'smtp.zeptomail.eu',
   port: 587,
   auth: {
-    user: process.env.USER,
+    user: "emailapikey",
     pass: process.env.PASS
   }
 };
