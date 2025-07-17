@@ -34,8 +34,8 @@ const Orders = () => {
       "Products": order.items.map(item => item.name).join(", "),
       "License Types": [...new Set(order.items.map(item => item.licenseType))].join(", "),
       "Bundles": [...new Set(order.items.flatMap(item => item.bundles || []))].join(", "),
-      "Subtotal": `$${order.subtotal.toFixed(2)}`,
-      "Total": `$${order.total.toFixed(2)}`,
+      "Subtotal": `£${order.subtotal.toFixed(2)}`,
+      "Total": `£${order.total.toFixed(2)}`,
       "Payment Method": order.paymentMethod,
       "Status": order.status,
       "Order Date": new Date(order.createdAt).toLocaleDateString()
@@ -64,7 +64,7 @@ const Orders = () => {
             </div>
             <div className="card" style={{ backgroundColor: '#2ecc71', color: '#fff' }}>
               <h3>Total Revenue <i className='fa-solid fa-dollar-sign'></i></h3>
-              <span>${totalRevenue}</span>
+              <span>£{totalRevenue}</span>
             </div>
             <div className="card" style={{ backgroundColor: '#e67e22', color: '#fff' }}>
               <h3>License Types <i className='fa fa-file-contract'></i></h3>
@@ -116,7 +116,7 @@ const Orders = () => {
                       <td style={{ textTransform: 'capitalize' }}>
                         {getPrimaryLicense(order.items)}
                       </td>
-                      <td>${order.total.toFixed(2)}</td>
+                      <td>£{order.total.toFixed(2)}</td>
                       <td style={{ 
                         textTransform: 'capitalize',
                         color: order.status === 'completed' ? 'green' : 
