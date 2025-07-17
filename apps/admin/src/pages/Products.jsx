@@ -483,8 +483,8 @@ const Products = () => {
                     <tr key={product.productId}>
                       <td>{product.productId.slice(8, -1)}</td>
                       <td>{product?.productDetails?.name}</td>
-                      <td>${product.licenses.personal}</td>
-                      <td>${product.licenses.commercial}</td>
+                      <td>£{product.licenses.personal}</td>
+                      <td>£{product.licenses.commercial}</td>
                       <td>
                         {product?.productDetails?.images?.length || 0} / 5 Images
                         {(product?.productDetails?.images?.length || 0) < 5 && (
@@ -1141,8 +1141,8 @@ const ProductInfoPopup = ({ product, isOpen, onClose, removeImage, removeBundle 
             </div>
             <div className="info-item">
               <h3>Pricing</h3>
-              <p><strong>Personal License:</strong> ${product.licenses.personal}</p>
-              <p><strong>Commercial License:</strong> ${product.licenses.commercial}</p>
+              <p><strong>Personal License:</strong> £{product.licenses.personal}</p>
+              <p><strong>Commercial License:</strong> £{product.licenses.commercial}</p>
             </div>
           </div>
 
@@ -1160,7 +1160,7 @@ const ProductInfoPopup = ({ product, isOpen, onClose, removeImage, removeBundle 
                     }}></i>
                     <div className="bundle-info">
                       <h4>{bundle.name}</h4>
-                      <p className="price">${bundle.price}</p>
+                      <p className="price">£{bundle.price}</p>
                       <ReactMarkdown>{bundle.description}</ReactMarkdown>
                     </div>
                     <p className='download'><a href={bundle.download}>{bundle.download}</a></p>
@@ -1184,7 +1184,7 @@ const ProductInfoPopup = ({ product, isOpen, onClose, removeImage, removeBundle 
                     }}></i>
                     <div className="bundle-info">
                       <h4>{bundle.name}</h4>
-                      <p className="price">${bundle.price}</p>
+                      <p className="price">£{bundle.price}</p>
                       <ReactMarkdown>{bundle.description}</ReactMarkdown>
                     </div>
                     <p className='download'><a href={bundle.download}>{bundle.download}</a></p>

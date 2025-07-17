@@ -28,7 +28,6 @@ const Orders = () => {
   function viewOrderDetail(order) {
     setShowPopup(true);
     
-    // Format order data for display
     const formattedData = {
       "Order ID": order.orderId,
       "Email": order.email,
@@ -36,7 +35,6 @@ const Orders = () => {
       "License Types": [...new Set(order.items.map(item => item.licenseType))].join(", "),
       "Bundles": [...new Set(order.items.flatMap(item => item.bundles || []))].join(", "),
       "Subtotal": `$${order.subtotal.toFixed(2)}`,
-      "Tax": `$${order.tax.toFixed(2)}`,
       "Total": `$${order.total.toFixed(2)}`,
       "Payment Method": order.paymentMethod,
       "Status": order.status,
@@ -46,12 +44,10 @@ const Orders = () => {
     setOrderData(formattedData);
   }
 
-  // Helper function to get primary product name
   const getPrimaryProduct = (items) => {
     return items.length > 0 ? items[0].name : 'N/A';
   };
 
-  // Helper function to get primary license type
   const getPrimaryLicense = (items) => {
     return items.length > 0 ? items[0].licenseType : 'N/A';
   };
