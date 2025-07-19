@@ -297,11 +297,11 @@ export default function ProductDetailPage(): JSX.Element {
             <div className="flex items-center space-x-2 text-3xl px-10 m-10 relative z-10">
                 <p onClick={() => {
                     window.location.href = '/'
-                }} className="text-white hover:text-gray-700 font-medium">BROWSE</p>
+                }} className="text-white cursor-pointer font-medium">BROWSE</p>
                 <span className="text-gray-400">/</span>
                 <p onClick={() => {
                     window.location.href = `/product/${product?.productId}`
-                }} className="text-white uppercase font-medium">{product?.productDetails?.name}</p>
+                }} className="text-white cursor-pointer uppercase font-medium">{product?.productDetails?.name}</p>
             </div>
             <ToastContainer position="top-right" />
 
