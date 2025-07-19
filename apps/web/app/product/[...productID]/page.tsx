@@ -296,7 +296,7 @@ export default function ProductDetailPage(): JSX.Element {
         <div className="container min-h-screen pt-30 mx-auto py-8 px-4">
             <div className="flex items-center space-x-2 text-3xl px-10 m-10 relative z-10">
                 <p onClick={() => {
-                    window.location.href = '/'
+                    window.location.href = '/browse'
                 }} className="text-white cursor-pointer font-medium">BROWSE</p>
                 <span className="text-gray-400">/</span>
                 <p onClick={() => {
