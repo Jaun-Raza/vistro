@@ -295,9 +295,13 @@ export default function ProductDetailPage(): JSX.Element {
     return (
         <div className="container min-h-screen pt-30 mx-auto py-8 px-4">
             <div className="flex items-center space-x-2 text-3xl px-10 m-10 relative z-10">
-                <a href="/browse" className="text-white hover:text-gray-700 font-medium">BROWSE</a>
+                <p onClick={() => {
+                    window.location.href = '/'
+                }} className="text-white hover:text-gray-700 font-medium">BROWSE</p>
                 <span className="text-gray-400">/</span>
-                <a href={`/product/${product?.productId}`} className="text-white uppercase font-medium">{product?.productDetails?.name}</a>
+                <p onClick={() => {
+                    window.location.href = `/product/${product?.productId}`
+                }} className="text-white uppercase font-medium">{product?.productDetails?.name}</p>
             </div>
             <ToastContainer position="top-right" />
 

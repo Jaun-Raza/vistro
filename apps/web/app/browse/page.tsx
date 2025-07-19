@@ -213,9 +213,13 @@ export default function Page() {
       </div>
 
       <div className="flex items-center space-x-2 text-3xl px-10 m-10 relative z-10">
-        <a href="/" className="text-gray-500 hover:text-gray-700 font-medium">HOME</a>
+        <p onClick={() => {
+          window.location.href='/'
+        }} className="text-white cursor-pointer font-medium">HOME</p>
         <span className="text-gray-400">/</span>
-        <a href="/browse" className="text-white font-medium">BROWSE</a>
+        <p onClick={() => {
+          window.location.href='/browse'
+        }} className="text-white cursor-pointer font-medium">BROWSE</p>
       </div>
 
       <div className="flex flex-col gap-4 md:flex-row-reverse relative z-10 container mx-auto">

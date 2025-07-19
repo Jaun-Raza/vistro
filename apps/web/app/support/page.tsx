@@ -357,39 +357,7 @@ export default function Page() {
 
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 pt-30">
-      <div className="absolute inset-0 z-0">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <motion.div
-            key={`horizontal-${i}`}
-            className="absolute h-px bg-white/10"
-            style={{
-              width: '100%',
-              top: `${10 + i * 12}%`,
-              left: 0,
-            }}
-            initial={{ opacity: 0, scaleX: 0 }}
-            animate={isInView ? { opacity: 0.5, scaleX: 1 } : {}}
-            transition={{ duration: 1.5, delay: 0.2 + i * 0.1 }}
-          />
-        ))}
-        {Array.from({ length: 8 }).map((_, i) => (
-          <motion.div
-            key={`vertical-${i}`}
-            className="absolute w-px bg-white/20"
-            style={{
-              height: '100%',
-              left: `${10 + i * 12}%`,
-              top: 0,
-            }}
-            initial={{ opacity: 0, scaleY: 0 }}
-            animate={isInView ? { opacity: 0.5, scaleY: 1 } : {}}
-            transition={{ duration: 1.5, delay: 0.2 + i * 0.1 }}
-          />
-        ))}
-      </div>
-
       <div className="relative z-10 max-w-3xl mx-auto">
-        {/* Page Header */}
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-white mb-4">Contact Us</h1>
           <div className="h-1 w-20 bg-white mx-auto"></div>

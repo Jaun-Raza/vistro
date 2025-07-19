@@ -28,7 +28,7 @@ export default function Footer() {
                         </a>
 
                         <a
-                            href="https://discord.com/invite/vistro"
+                            href="https://discord.gg/HsvVFQFA8Y"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-gray-600 hover:text-black transition"
