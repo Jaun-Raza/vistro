@@ -155,38 +155,8 @@ export default function Page() {
   const totalPages = Math.ceil(totalProducts / PRODUCTS_PER_PAGE);
 
   return (
-    <div className="min-h-screen bg-[#eef0f3]">
+    <div className="min-h-screen ">
       {/* Background grid */}
-      <div className="absolute inset-0 z-0">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <motion.div
-            key={`horizontal-${i}`}
-            className="absolute h-px bg-black/10"
-            style={{
-              width: '100%',
-              top: `${10 + i * 12}%`,
-              left: 0,
-            }}
-            initial={{ opacity: 0, scaleX: 0 }}
-            animate={isInView ? { opacity: 0.5, scaleX: 1 } : {}}
-            transition={{ duration: 1.5, delay: 0.2 + i * 0.1 }}
-          />
-        ))}
-        {Array.from({ length: 8 }).map((_, i) => (
-          <motion.div
-            key={`vertical-${i}`}
-            className="absolute w-px bg-black/20"
-            style={{
-              height: '100%',
-              left: `${10 + i * 12}%`,
-              top: 0,
-            }}
-            initial={{ opacity: 0, scaleY: 0 }}
-            animate={isInView ? { opacity: 0.5, scaleY: 1 } : {}}
-            transition={{ duration: 1.5, delay: 0.2 + i * 0.1 }}
-          />
-        ))}
-      </div>
 
       <div className="relative z-10 pt-4 pb-4 container mx-auto pt-23">
         <div className="grid grid-cols-4 gap-2 pt-4 mb-2 px-5">
@@ -245,13 +215,13 @@ export default function Page() {
       <div className="flex items-center space-x-2 text-3xl px-10 m-10 relative z-10">
         <a href="/" className="text-gray-500 hover:text-gray-700 font-medium">HOME</a>
         <span className="text-gray-400">/</span>
-        <a href="/browse" className="text-blue-600 font-medium">BROWSE</a>
+        <a href="/browse" className="text-white font-medium">BROWSE</a>
       </div>
 
       <div className="flex flex-col gap-4 md:flex-row-reverse relative z-10 container mx-auto">
-        <aside className="w-[90%] md:w-1/4 border border-black p-4 rounded-sm space-y-4 bg-white ml-4 h-fit">
+        <aside className="w-[90%] md:w-1/4 border border-black p-4 rounded-sm space-y-4 ml-4 h-fit">
           <div className="relative w-full">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-600">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-black">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -272,14 +242,14 @@ export default function Page() {
               placeholder="Search products"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 text-gray-800 placeholder-gray-400 bg-white border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full pl-10 pr-4 py-2 text-white placeholder-gray-400 bg-white border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
           </div>
 
           <div>
-            <h2 className="font-semibold mb-2 text-xl text-blue-600">Sort By</h2>
+            <h2 className="font-semibold mb-2 text-xl text-white">Sort By</h2>
             <Select value={sortOrder} onValueChange={setSortOrder}>
-              <SelectTrigger className="w-full text-base border-gray-300 text-gray-800">
+              <SelectTrigger className="w-full text-base border-gray-300 text-white">
                 {
                   sortOrder === "lowest" ? "Price: Low to High" :
                     sortOrder === "highest" ? "Price: High to Low" :
@@ -288,7 +258,7 @@ export default function Page() {
                           "Recently Uploaded"
                 }
               </SelectTrigger>
-              <SelectContent className="text-gray-800">
+              <SelectContent className="text-black">
                 <SelectItem value="lowest" className="text-base">Price: Low to High</SelectItem>
                 <SelectItem value="highest" className="text-base">Price: High to Low</SelectItem>
                 <SelectItem value="bestSellers" className="text-base">Best Sellers</SelectItem>
@@ -299,14 +269,14 @@ export default function Page() {
           </div>
 
           <div>
-            <h2 className="font-semibold mb-2 text-xl text-blue-600">Filter</h2>
+            <h2 className="font-semibold mb-2 text-xl text-white">Filter</h2>
             <Select value={selectedFilter} onValueChange={setSelectedFilter}>
-              <SelectTrigger className="w-full text-base border-gray-300 text-gray-800">
+              <SelectTrigger className="w-full text-base border-gray-300 text-white">
                 {selectedFilter === "all" ? "All Products" :
                   selectedFilter === "new" ? "New Products" :
                     selectedFilter === "sale" ? "On Sale" : "Featured"}
               </SelectTrigger>
-              <SelectContent className="text-gray-800">
+              <SelectContent className="text-black">
                 <SelectItem value="all" className="text-base">All Products</SelectItem>
                 <SelectItem value="new" className="text-base">New Products</SelectItem>
                 <SelectItem value="sale" className="text-base">On Sale</SelectItem>
@@ -316,14 +286,14 @@ export default function Page() {
           </div>
 
           <div>
-            <h2 className="font-semibold mb-2 text-xl text-blue-600">Tags</h2>
+            <h2 className="font-semibold mb-2 text-xl text-white">Tags</h2>
             <div className="flex flex-wrap gap-2">
               {availableTags.slice(0, 6).map((tag) => (
                 <Button
                   key={tag}
                   size="sm"
                   variant="outline"
-                  className="text-gray-800 text-base border-gray-300"
+                  className="text-black text-base border-gray-300"
                   onClick={() => {
                     setSelectedTag(tag);
                   }}
@@ -337,7 +307,7 @@ export default function Page() {
           <div className="pt-6">
             <Button
               size="lg"
-              className="text-xl p-4 w-full bg-black hover:bg-gray-800 text-white"
+              className="text-xl p-4 w-full bg-white hover:bg-gray-200 text-black cursor-pointer"
               onClick={handleClearFilters}
             >
               Clear Filters
@@ -373,7 +343,7 @@ export default function Page() {
                       <PaginationItem>
                         <PaginationPrevious
                           onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-                          className="text-lg text-blue-600"
+                          className="text-lg text-white"
                           aria-disabled={currentPage === 1}
                         />
                       </PaginationItem>
@@ -391,7 +361,7 @@ export default function Page() {
                       <PaginationItem>
                         <PaginationNext
                           onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-                          className="text-lg text-blue-600"
+                          className="text-lg text-white"
                           aria-disabled={currentPage === totalPages}
                         />
                       </PaginationItem>

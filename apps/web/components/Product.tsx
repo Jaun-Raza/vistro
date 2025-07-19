@@ -40,7 +40,7 @@ const ProductCard = ({
 
   return (
    <a href={"/product/" + id}>
-     <Card className="w-full max-w-full rounded-2xl overflow-hidden text-black shadow-md hover:shadow-xl transition-shadow duration-300">
+     <Card className="w-full max-w-full bg-transparent rounded-2xl overflow-hidden text-black shadow-md hover:shadow-xl transition-shadow duration-300 border-none">
       <div className="relative bg-blue-50">
         {badgeText && (
           <div className="absolute top-2 left-2 z-10 bg-blue-500 text-white font-medium px-2 py-1 rounded-md text-lg">
@@ -62,21 +62,21 @@ const ProductCard = ({
               onClick={prevImage}
               className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-1 shadow-md hover:bg-white"
             >
-              <ChevronLeft size={20} className="text-blue-600" />
+              <ChevronLeft size={20} className="text-black cursor-pointer" />
             </button>
             <button 
               onClick={nextImage}
               className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-1 shadow-md hover:bg-white"
             >
-              <ChevronRight size={20} className="text-blue-600" />
+              <ChevronRight size={20} className="text-black cursor-pointer" />
             </button>
           </>
         )}
       </div>
 
       <CardHeader className="px-4 pb-0">
-        <h3 className="text-blue-500 font-bold text-2xl text-left">{title}</h3>
-        {subtitle && <p className="text-slg text-gray-600 text-left">{subtitle}</p>}
+        <h3 className="text-white font-bold text-2xl text-left">{title}</h3>
+        {subtitle && <p className="text-slg text-gray-300 text-left">{subtitle}</p>}
       </CardHeader>
 
       <CardContent className="px-4 space-y-2">
@@ -86,7 +86,7 @@ const ProductCard = ({
               <Badge
                 key={`${id}-tag-${index}`}
                 variant="outline"
-                className="bg-blue-100 text-blue-700 border-blue-200 text-sm"
+                className="bg-blue-100 text-black border-blue-200 text-sm"
               >
                 {tag}
               </Badge>
@@ -98,7 +98,7 @@ const ProductCard = ({
 
       <CardFooter className="px-4 py-3 flex justify-between items-center">
         <div className="flex items-end gap-2">
-          <span className="text-xl font-bold text-blue-600">
+          <span className="text-xl font-bold text-white">
             {currency}{price}
           </span>
         </div>

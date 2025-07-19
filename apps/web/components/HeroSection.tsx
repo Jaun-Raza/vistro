@@ -15,37 +15,6 @@ const HeroSection = () => {
 
   return (
     <div className="relative w-full overflow-hidden flex items-center justify-center pt-40">
-      <div className="absolute inset-0 z-0">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <motion.div
-            key={`horizontal-${i}`}
-            className="absolute h-px bg-white/10"
-            style={{
-              width: '100%',
-              top: `${10 + i * 12}%`,
-              left: 0,
-            }}
-            initial={{ opacity: 0, scaleX: 0 }}
-            animate={isInView ? { opacity: 0.5, scaleX: 1 } : {}}
-            transition={{ duration: 1.5, delay: 0.2 + i * 0.1 }}
-          />
-        ))}
-        {Array.from({ length: 8 }).map((_, i) => (
-          <motion.div
-            key={`vertical-${i}`}
-            className="absolute w-px bg-white/20"
-            style={{
-              height: '100%',
-              left: `${10 + i * 12}%`,
-              top: 0,
-            }}
-            initial={{ opacity: 0, scaleY: 0 }}
-            animate={isInView ? { opacity: 0.5, scaleY: 1 } : {}}
-            transition={{ duration: 1.5, delay: 0.2 + i * 0.1 }}
-          />
-        ))}
-      </div>
-
       <div className="container mx-auto px-4 z-10">
         <div className="flex flex-col items-center justify-center">
           <motion.div
@@ -58,7 +27,7 @@ const HeroSection = () => {
               <span className="flex flex-col text-[2.5rem] md:flex-row md:text-7xl items-center gap-2 text-white">Affordable Game-Ready <WordRotate
                 className="font-bold text-black dark:text-white"
                 words={[
-                  "Audio",
+                  "Audio", 
                   "Clothing",
                   "Games",
                   "Graphics & UI",

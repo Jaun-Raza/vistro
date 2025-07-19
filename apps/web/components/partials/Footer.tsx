@@ -6,7 +6,7 @@ import Image from 'next/image';
 
 export default function Footer() {
     return (
-        <footer className="bg-white text-black py-5 pt-10 px-6 md:px-20 border-t border-gray-200 shadow-xl shadow-purple-500 relative z-10">
+        <footer className="text-white py-5 pt-10 px-6 md:px-20 relative z-10">
 
             <div className="flex flex-col md:flex-row justify-between gap-10">
                 {/* Left Side */}

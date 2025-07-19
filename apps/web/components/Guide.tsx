@@ -12,38 +12,9 @@ const Guide = () => {
     }, []);
 
     return (
-        <div className="w-full min-h-screen bg-[#eef0f3] p-6 md:p-12 relative overflow-hidden">
+        <div className="w-full min-h-screen p-6 md:p-12 relative overflow-hidden">
           
-            <div className="absolute inset-0 z-0">
-                {Array.from({ length: 8 }).map((_, i) => (
-                    <motion.div
-                        key={`horizontal-${i}`}
-                        className="absolute h-px bg-black/10"
-                        style={{
-                            width: '100%',
-                            top: `${10 + i * 12}%`,
-                            left: 0,
-                        }}
-                        initial={{ opacity: 0, scaleX: 0 }}
-                        animate={isInView ? { opacity: 0.5, scaleX: 1 } : {}}
-                        transition={{ duration: 1.5, delay: 0.2 + i * 0.1 }}
-                    />
-                ))}
-                {Array.from({ length: 8 }).map((_, i) => (
-                    <motion.div
-                        key={`vertical-${i}`}
-                        className="absolute w-px bg-black/20"
-                        style={{
-                            height: '100%',
-                            left: `${10 + i * 12}%`,
-                            top: 0,
-                        }}
-                        initial={{ opacity: 0, scaleY: 0 }}
-                        animate={isInView ? { opacity: 0.5, scaleY: 1 } : {}}
-                        transition={{ duration: 1.5, delay: 0.2 + i * 0.1 }}
-                    />
-                ))}
-            </div>
+           
 
             <div className="relative z-10">
                 <motion.div
@@ -52,8 +23,8 @@ const Guide = () => {
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.7 }}
                 >
-                    <h1 className="text-4xl md:text-6xl font-bold text-indigo-700 mb-4">How To Buy</h1>
-                    <p className="text-2xl text-indigo-500 max-w-2xl mx-auto">
+                    <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">How To Buy</h1>
+                    <p className="text-2xl text-white max-w-2xl mx-auto">
                         Your Step-by-Step Guide to Shopping Smart.
                     </p>
                 </motion.div>
