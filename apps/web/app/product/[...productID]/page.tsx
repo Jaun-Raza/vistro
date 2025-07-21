@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ShoppingCart, ChevronDown, ChevronUp } from 'lucide-react';
-import Image from "next/image";
 import { useCart } from "../../CartContext";
 import { ToastContainer } from '@/components/Toast';
 import { getSingleProduct } from 'app/services/product';
@@ -318,7 +317,7 @@ export default function ProductDetailPage(): JSX.Element {
                                     className={`w-16 h-16 cursor-pointer border-2 ${selectedImage === index ? 'border-blue-500' : 'border-gray-200'}`}
                                     onClick={() => setSelectedImage(index)}
                                 >
-                                    <Image
+                                    <img
                                         src={img}
                                         alt={`Product thumbnail ${index + 1}`}
                                         className="w-full h-full object-cover"
@@ -331,7 +330,7 @@ export default function ProductDetailPage(): JSX.Element {
 
                         {/* Main Image */}
                         <div className="flex-1">
-                            <Image
+                            <img
                                 src={product.productDetails.images[selectedImage] || '/placeholder.jpg'}
                                 alt={product.productDetails.name}
                                 className="w-full h-full rounded-lg object-cover"
@@ -357,7 +356,7 @@ export default function ProductDetailPage(): JSX.Element {
                                             <div className="flex flex-col">
                                                 <div className="flex items-start gap-4">
                                                     {bundle.image && (
-                                                        <Image
+                                                        <img
                                                             src={bundle.image}
                                                             alt={bundle.name}
                                                             className="w-16 h-16 object-cover rounded"
