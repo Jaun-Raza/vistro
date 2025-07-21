@@ -269,7 +269,7 @@ function CartItemCard({ item, onRemove }: { item: { id: string, name: string, ta
               <img
                 src={imageUrl}
                 alt={name}
-                className="object-cover rounded-lg"
+                className="object-cover rounded-lg h-[100%]"
               />
             ) : (
               <div className="flex items-center justify-center h-full">
