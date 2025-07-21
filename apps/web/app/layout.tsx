@@ -7,6 +7,9 @@ import { CartProvider } from "./CartContext";
 export const metadata: Metadata = {
   title: "Vistro.shop",
   description: "Vistro.shop a store of roblox",
+  icons: {
+    icon: '/logo.png'
+  }
 };
 
 export default function RootLayout({
