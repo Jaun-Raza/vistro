@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from '../CartContext';
 import { Button } from '@/components/ui/button';
@@ -267,10 +266,9 @@ function CartItemCard({ item, onRemove }: { item: { id: string, name: string, ta
         <div className="flex flex-col sm:flex-row">
           <div className="relative w-full sm:w-42 h-42 m-auto bg-gray-100">
             {imageUrl ? (
-              <Image
+              <img
                 src={imageUrl}
                 alt={name}
-                fill
                 className="object-cover rounded-lg"
               />
             ) : (
