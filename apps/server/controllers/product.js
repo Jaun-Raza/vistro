@@ -925,12 +925,14 @@ const b2 = new B2({
     applicationKey: process.env.B2_APPLICATION_KEY,
 });
 
-async function streamFileToClient(res, fileName, displayName) {
+async function  streamFileToClient(res, fileName, displayName) {
   const file = await b2.downloadFileByName({
     bucketName: 'vistro',
     fileName,
     responseType: 'stream',
   });
+
+  console.log(file)
 
   res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
 
@@ -943,7 +945,7 @@ async function streamFileToClient(res, fileName, displayName) {
 
 
 export async function handleProductDownload(req, res) {
-    const { orderId, itemId, bundleName = null, token } = req.body;
+    const { orderId, itemId, bundleName = "", token } = req.body;
 
     try {
         const order = await Order.findOne({ orderId });
@@ -970,7 +972,7 @@ export async function handleProductDownload(req, res) {
 
         await b2.authorize();
 
-        if (bundleName !== null) {
+        if (bundleName !== "") {
             let bundleFile = "";
             const foundPurchasedOrder = await order.items.find((item) => {
                 return item.id === itemId
@@ -997,8 +999,9 @@ export async function handleProductDownload(req, res) {
 
                 bundleFile = foundBundle.download;
             }
-
+            
            await streamFileToClient(res, bundleFile, bundleName);
+            
         } else {
             const productFile = product.productDetails.download;
 
