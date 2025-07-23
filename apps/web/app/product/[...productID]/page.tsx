@@ -10,6 +10,7 @@ import { ShoppingCart, ChevronDown, ChevronUp } from 'lucide-react';
 import { useCart } from "../../CartContext";
 import { ToastContainer } from '@/components/Toast';
 import { getSingleProduct } from 'app/services/product';
+import Head from 'next/head';
 
 interface ProductBundle {
     id: string;
@@ -94,6 +95,52 @@ export default function ProductDetailPage(): JSX.Element {
     const [expandedBundles, setExpandedBundles] = useState<ExpandedBundles>({});
     const { state, addItem, removeItem } = useCart();
 
+    const stripMarkdown = (text: string): string => {
+        return text
+            .replace(/[#*`_~\[\]()]/g, '')
+            .replace(/\n+/g, ' ')
+            .trim()
+            .substring(0, 160);
+    };
+
+    useEffect(() => {
+        if (product) {
+            const title = `${product.productDetails.name} | Vistro.shop`;
+            const description = stripMarkdown(product.productDetails.description || product.productDetails.tagline);
+            const image = product.productDetails.images[0] || '/placeholder.jpg';
+            const url = `https://vistro.shop/product/${product.productId}`;
+
+            document.title = title;
+
+            const updateMetaTag = (property: string, content: string) => {
+                let meta = document.querySelector(`meta[property="${property}"]`) ||
+                    document.querySelector(`meta[name="${property}"]`);
+
+                if (!meta) {
+                    meta = document.createElement('meta');
+                    if (property.startsWith('og:') || property.startsWith('twitter:')) {
+                        meta.setAttribute('property', property);
+                    } else {
+                        meta.setAttribute('name', property);
+                    }
+                    document.head.appendChild(meta);
+                }
+                meta.setAttribute('content', content);
+            };
+
+            updateMetaTag('description', description);
+            updateMetaTag('og:title', title);
+            updateMetaTag('og:description', description);
+            updateMetaTag('og:image', image);
+            updateMetaTag('og:url', url);
+            updateMetaTag('og:type', 'product');
+            updateMetaTag('twitter:card', 'summary_large_image');
+            updateMetaTag('twitter:title', title);
+            updateMetaTag('twitter:description', description);
+            updateMetaTag('twitter:image', image);
+        }
+    }, [product]);
+
     useEffect(() => {
         if (!productId) return;
 
@@ -107,7 +154,6 @@ export default function ProductDetailPage(): JSX.Element {
                     const productData = response.product;
                     setProduct(productData);
 
-                    // Set default license type based on availability
                     const hasPersonalLicense = Boolean(productData.licenses.personal && parseFloat(productData.licenses.personal) > 0);
                     const hasCommercialLicense = Boolean(productData.licenses.commercial && parseFloat(productData.licenses.commercial) > 0);
 
@@ -282,195 +328,212 @@ export default function ProductDetailPage(): JSX.Element {
         );
     }
 
-    // Get the appropriate bundles based on license type
     const activeBundles: ProductBundle[] = licenseType === "personal"
         ? product.bundlesPersonal || []
         : product.bundlesCommercial || [];
 
-    // Check if product has valid licenses
     const hasPersonalLicense: boolean = Boolean(product.licenses.personal && parseFloat(product.licenses.personal) > 0);
     const hasCommercialLicense: boolean = Boolean(product.licenses.commercial && parseFloat(product.licenses.commercial) > 0);
 
     return (
-        <div className="container min-h-screen pt-30 mx-auto py-8 px-4">
-            <div className="flex items-center space-x-2 text-3xl px-10 m-10 relative z-10">
-                <p onClick={() => {
-                    window.location.href = '/browse'
-                }} className="text-white cursor-pointer font-medium">BROWSE</p>
-                <span className="text-gray-400">/</span>
-                <p onClick={() => {
-                    window.location.href = `/product/${product?.productId}`
-                }} className="text-white cursor-pointer uppercase font-medium">{product?.productDetails?.name}</p>
-            </div>
-            <ToastContainer position="top-right" />
+        <>
+            <Head>
+                <title>{product.productDetails.name} | Vistro.shop</title>
+                <meta name="description" content={stripMarkdown(product.productDetails.description || product.productDetails.tagline)} />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Left Column - Images & Bundles */}
-                <div className="space-y-8">
-                    {/* Image Carousel */}
-                    <div className="flex flex-row gap-4">
-                        {/* Thumbnail Column */}
-                        <div className="flex flex-col gap-2">
-                            {product.productDetails.images.map((img: string, index: number) => (
-                                <div
-                                    key={index}
-                                    className={`w-16 h-16 cursor-pointer border-2 ${selectedImage === index ? 'border-blue-500' : 'border-gray-200'}`}
-                                    onClick={() => setSelectedImage(index)}
-                                >
-                                    <img
-                                        src={img}
-                                        alt={`Product thumbnail ${index + 1}`}
-                                        className="w-full h-full object-cover"
-                                        width={64}
-                                        height={64}
-                                    />
-                                </div>
-                            ))}
-                        </div>
+                <meta property="og:title" content={`${product.productDetails.name} | Vistro.shop`} />
+                <meta property="og:description" content={stripMarkdown(product.productDetails.description || product.productDetails.tagline)} />
+                <meta property="og:image" content={product.productDetails.images[0] || '/placeholder.jpg'} />
+                <meta property="og:url" content={`https://vistro.shop/product/${product.productId}`} />
+                <meta property="og:type" content="product" />
+                <meta property="og:site_name" content="Vistro.shop" />
 
-                        {/* Main Image */}
-                        <div className="flex-1">
-                            <img
-                                src={product.productDetails.images[selectedImage] || '/placeholder.jpg'}
-                                alt={product.productDetails.name}
-                                className="w-full h-full rounded-lg object-cover"
-                                width={600}
-                                height={400}
-                            />
-                        </div>
-                    </div>
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={`${product.productDetails.name} | Vistro.shop`} />
+                <meta name="twitter:description" content={stripMarkdown(product.productDetails.description || product.productDetails.tagline)} />
+                <meta name="twitter:image" content={product.productDetails.images[0] || '/placeholder.jpg'} />
+            </Head>
 
-                    {/* Bundles Section */}
-                    {activeBundles.length > 0 && (
-                        <div className="space-y-4">
-                            <h3 className="text-3xl font-bold text-white">
-                                Available Bundles
-                                <span className="ml-2 text-xl font-normal text-gray-300">
-                                    ({licenseType === "personal" ? "Personal" : "Commercial"})
-                                </span>
-                            </h3>
-                            <div className="grid grid-cols-1 gap-4">
-                                {activeBundles.map((bundle: ProductBundle) => (
-                                    <Card key={bundle.id} className="overflow-hidden">
-                                        <CardContent className="p-4">
-                                            <div className="flex flex-col">
-                                                <div className="flex items-start gap-4">
-                                                    {bundle.image && (
-                                                        <img
-                                                            src={bundle.image}
-                                                            alt={bundle.name}
-                                                            className="w-16 h-16 object-cover rounded"
-                                                            width={64}
-                                                            height={64}
-                                                        />
-                                                    )}
-                                                    <div className="flex-1">
-                                                        <div className="flex items-center justify-between">
-                                                            <div className="flex items-center gap-2">
-                                                                <Checkbox
-                                                                    id={`bundle-${bundle.id}`}
-                                                                    checked={selectedBundles[bundle.id] || false}
-                                                                    onCheckedChange={() => handleBundleToggle(bundle.id)}
-                                                                />
-                                                                <label htmlFor={`bundle-${bundle.id}`} className="font-semibold cursor-pointer text-xl">
-                                                                    {bundle.name}
-                                                                </label>
-                                                            </div>
-                                                            <div className="flex items-center gap-2">
-                                                                <div className="text-sm font-medium text-xl">
-                                                                    {parseFloat(bundle.price) === 0 ? 'Included' : `+£${parseFloat(bundle.price).toFixed(2)}`}
-                                                                </div>
-                                                                {bundle.description && (
-                                                                    <Button
-                                                                        variant="ghost"
-                                                                        size="sm"
-                                                                        onClick={() => toggleBundleDescription(bundle.id)}
-                                                                        className="p-1"
-                                                                    >
-                                                                        {expandedBundles[bundle.id] ?
-                                                                            <ChevronUp className="h-5 w-5" /> :
-                                                                            <ChevronDown className="h-5 w-5" />
-                                                                        }
-                                                                    </Button>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+            <div className="container min-h-screen pt-30 mx-auto py-8 px-4">
+                <div className="flex items-center space-x-2 text-3xl px-10 m-10 relative z-10">
+                    <p onClick={() => {
+                        window.location.href = '/browse'
+                    }} className="text-white cursor-pointer font-medium">BROWSE</p>
+                    <span className="text-gray-400">/</span>
+                    <p onClick={() => {
+                        window.location.href = `/product/${product?.productId}`
+                    }} className="text-white cursor-pointer uppercase font-medium">{product?.productDetails?.name}</p>
+                </div>
+                <ToastContainer position="top-right" />
 
-                                                {/* Bundle Description */}
-                                                {expandedBundles[bundle.id] && bundle.description && (
-                                                    <div className="mt-4 pl-20">
-                                                        <div className="prose prose-invert max-w-none">
-                                                            <ReactMarkdown>{bundle.description}</ReactMarkdown>
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </CardContent>
-                                    </Card>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* Left Column - Images & Bundles */}
+                    <div className="space-y-8">
+                        {/* Image Carousel */}
+                        <div className="flex flex-row gap-4">
+                            {/* Thumbnail Column */}
+                            <div className="flex flex-col gap-2">
+                                {product.productDetails.images.map((img: string, index: number) => (
+                                    <div
+                                        key={index}
+                                        className={`w-16 h-16 cursor-pointer border-2 ${selectedImage === index ? 'border-blue-500' : 'border-gray-200'}`}
+                                        onClick={() => setSelectedImage(index)}
+                                    >
+                                        <img
+                                            src={img}
+                                            alt={`Product thumbnail ${index + 1}`}
+                                            className="w-full h-full object-cover"
+                                            width={64}
+                                            height={64}
+                                        />
+                                    </div>
                                 ))}
                             </div>
-                        </div>
-                    )}
-                </div>
 
-                {/* Right Column - Product Details */}
-                <div className="space-y-6">
-                    <div>
-                        <h1 className="text-6xl font-bold text-white">{product.productDetails.name}</h1>
-                        <p className="text-xl text-gray-300 mt-1">{product.productDetails.tagline}</p>
+                            {/* Main Image */}
+                            <div className="flex-1">
+                                <img
+                                    src={product.productDetails.images[selectedImage] || '/placeholder.jpg'}
+                                    alt={product.productDetails.name}
+                                    className="w-full h-full rounded-lg object-cover"
+                                    width={600}
+                                    height={400}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Bundles Section */}
+                        {activeBundles.length > 0 && (
+                            <div className="space-y-4">
+                                <h3 className="text-3xl font-bold text-white">
+                                    Available Bundles
+                                    <span className="ml-2 text-xl font-normal text-gray-300">
+                                        ({licenseType === "personal" ? "Personal" : "Commercial"})
+                                    </span>
+                                </h3>
+                                <div className="grid grid-cols-1 gap-4">
+                                    {activeBundles.map((bundle: ProductBundle) => (
+                                        <Card key={bundle.id} className="overflow-hidden">
+                                            <CardContent className="p-4">
+                                                <div className="flex flex-col">
+                                                    <div className="flex items-start gap-4">
+                                                        {bundle.image && (
+                                                            <img
+                                                                src={bundle.image}
+                                                                alt={bundle.name}
+                                                                className="w-16 h-16 object-cover rounded"
+                                                                width={64}
+                                                                height={64}
+                                                            />
+                                                        )}
+                                                        <div className="flex-1">
+                                                            <div className="flex items-center justify-between">
+                                                                <div className="flex items-center gap-2">
+                                                                    <Checkbox
+                                                                        id={`bundle-${bundle.id}`}
+                                                                        checked={selectedBundles[bundle.id] || false}
+                                                                        onCheckedChange={() => handleBundleToggle(bundle.id)}
+                                                                    />
+                                                                    <label htmlFor={`bundle-${bundle.id}`} className="font-semibold cursor-pointer text-xl">
+                                                                        {bundle.name}
+                                                                    </label>
+                                                                </div>
+                                                                <div className="flex items-center gap-2">
+                                                                    <div className="text-sm font-medium text-xl">
+                                                                        {parseFloat(bundle.price) === 0 ? 'Included' : `+£${parseFloat(bundle.price).toFixed(2)}`}
+                                                                    </div>
+                                                                    {bundle.description && (
+                                                                        <Button
+                                                                            variant="ghost"
+                                                                            size="sm"
+                                                                            onClick={() => toggleBundleDescription(bundle.id)}
+                                                                            className="p-1"
+                                                                        >
+                                                                            {expandedBundles[bundle.id] ?
+                                                                                <ChevronUp className="h-5 w-5" /> :
+                                                                                <ChevronDown className="h-5 w-5" />
+                                                                            }
+                                                                        </Button>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Bundle Description */}
+                                                    {expandedBundles[bundle.id] && bundle.description && (
+                                                        <div className="mt-4 pl-20">
+                                                            <div className="prose prose-invert max-w-none">
+                                                                <ReactMarkdown>{bundle.description}</ReactMarkdown>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
 
-                    {/* License Options */}
-                    <div className="space-y-4">
-                        <div className="flex flex-col gap-2">
-                            {hasPersonalLicense && (
-                                <div className="flex items-center gap-2">
-                                    <Checkbox
-                                        id="license-personal"
-                                        checked={licenseType === "personal"}
-                                        onCheckedChange={() => handleLicenseChange("personal")}
-                                    />
-                                    <label htmlFor="license-personal" className="cursor-pointer text-white text-lg">
-                                        Personal License - £{parseFloat(product.licenses.personal).toFixed(2)}
-                                    </label>
-                                </div>
-                            )}
-                            {hasCommercialLicense && (
-                                <div className="flex items-center gap-2">
-                                    <Checkbox
-                                        id="license-commercial"
-                                        checked={licenseType === "commercial"}
-                                        onCheckedChange={() => handleLicenseChange("commercial")}
-                                    />
-                                    <label htmlFor="license-commercial" className="cursor-pointer text-white text-lg">
-                                        Commercial License - £{parseFloat(product.licenses.commercial).toFixed(2)}
-                                    </label>
-                                </div>
-                            )}
+                    {/* Right Column - Product Details */}
+                    <div className="space-y-6">
+                        <div>
+                            <h1 className="text-6xl font-bold text-white">{product.productDetails.name}</h1>
+                            <p className="text-xl text-gray-300 mt-1">{product.productDetails.tagline}</p>
                         </div>
-                        <div className="text-2xl font-bold mt-2 text-white">Total: £{totalPrice.toFixed(2)}</div>
-                    </div>
 
-                    {/* Add to Cart Button */}
-                    <Button
-                        onClick={handleAddToCart}
-                        disabled={!hasPersonalLicense && !hasCommercialLicense}
-                        className="w-full py-6 text-xl hover:cursor-pointer hover:text-white text-black bg-white"
-                    >
-                        <ShoppingCart className="mr-2 h-5 w-5" />
-                        Add to Cart
-                    </Button>
+                        {/* License Options */}
+                        <div className="space-y-4">
+                            <div className="flex flex-col gap-2">
+                                {hasPersonalLicense && (
+                                    <div className="flex items-center gap-2">
+                                        <Checkbox
+                                            id="license-personal"
+                                            checked={licenseType === "personal"}
+                                            onCheckedChange={() => handleLicenseChange("personal")}
+                                        />
+                                        <label htmlFor="license-personal" className="cursor-pointer text-white text-lg">
+                                            Personal License - £{parseFloat(product.licenses.personal).toFixed(2)}
+                                        </label>
+                                    </div>
+                                )}
+                                {hasCommercialLicense && (
+                                    <div className="flex items-center gap-2">
+                                        <Checkbox
+                                            id="license-commercial"
+                                            checked={licenseType === "commercial"}
+                                            onCheckedChange={() => handleLicenseChange("commercial")}
+                                        />
+                                        <label htmlFor="license-commercial" className="cursor-pointer text-white text-lg">
+                                            Commercial License - £{parseFloat(product.licenses.commercial).toFixed(2)}
+                                        </label>
+                                    </div>
+                                )}
+                            </div>
+                            <div className="text-2xl font-bold mt-2 text-white">Total: £{totalPrice.toFixed(2)}</div>
+                        </div>
 
-                    {/* Product Description */}
-                    <div>
-                        <div className="prose prose-invert max-w-none text-gray-100 rounded-lg p-4 text-center whitespace-pre-line text-2xl">
-                            <ReactMarkdown>{product.productDetails.description}</ReactMarkdown>
+                        {/* Add to Cart Button */}
+                        <Button
+                            onClick={handleAddToCart}
+                            disabled={!hasPersonalLicense && !hasCommercialLicense}
+                            className="w-full py-6 text-xl hover:cursor-pointer hover:text-white text-black bg-white"
+                        >
+                            <ShoppingCart className="mr-2 h-5 w-5" />
+                            Add to Cart
+                        </Button>
+
+                        {/* Product Description */}
+                        <div>
+                            <div className="prose prose-invert max-w-none text-gray-100 rounded-lg p-4 text-center whitespace-pre-line text-2xl">
+                                <ReactMarkdown>{product.productDetails.description}</ReactMarkdown>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
