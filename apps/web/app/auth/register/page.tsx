@@ -122,7 +122,6 @@ export default function RegisterPage() {
   }, [step]); // Re-run when step changes to 3
 
   const onRecaptchaVerified = (token: string): void => {
-    console.log("reCAPTCHA verified with token:", token);
     setRecaptchaVerified(true);
     recaptchaToken.current = token;
 
@@ -356,6 +355,7 @@ export default function RegisterPage() {
 
     try {
       const response = await register({ ...formData, recaptchaToken: token });
+
       if (response.success) {
         setSuccess("Registration successful! Please check your email to verify your account.");
         setLoading(false);

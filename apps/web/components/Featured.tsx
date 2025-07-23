@@ -137,9 +137,6 @@ const Featured: React.FC = () => {
           transition={{ duration: 0.7 }}
         >
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">Featured Products</h1>
-          <p className="text-2xl text-white max-w-2xl mx-auto">
-            Vistro's Elite Picks Crafted for the Boldest Gamers.
-          </p>
         </motion.div>
 
         <motion.div
