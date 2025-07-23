@@ -5,9 +5,12 @@ import Footer from "@/components/partials/Footer";
 import { CartProvider } from "./CartContext";
 
 export const metadata: Metadata = {
-  title: "Buy Premium Roblox Assets | Models, Scripts & Vehicles | Vistro.shop",
-  description:
-    "Explore high-quality Roblox assets, vehicles, maps, scripts, and full games at Vistro.shop. Trusted by developers for realistic, ready-to-use content. Buy now!",
+  metadataBase: new URL('https://vistro.shop'),
+  title: {
+    template: '%s | Vistro.shop',
+    default: 'Buy Premium Roblox Assets | Models, Scripts & Vehicles | Vistro.shop'
+  },
+  description: "Explore high-quality Roblox assets, vehicles, maps, scripts, and full games at Vistro.shop. Trusted by developers for realistic, ready-to-use content. Buy now!",
   keywords: [
     "Roblox assets for sale",
     "buy Roblox models",
@@ -66,7 +69,20 @@ export const metadata: Metadata = {
   icons: {
     icon: '/logo.png',
   },
+  openGraph: {
+    type: 'website',
+    siteName: 'Vistro.shop',
+    locale: 'en_GB',
+  },
+  twitter: {
+    card: 'summary_large_image',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
+
 export default function RootLayout({
   children,
 }: {
