@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema({
     },
     discordUserId: {
         type: String,
-        required: true
+        required: false
     },
     agreeToTerms: {
         type: Boolean,

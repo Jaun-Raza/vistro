@@ -334,7 +334,7 @@ export async function signUp(req, res) {
 
         return res.status(200).json({ message: "Successfully Registered! check your email for verify your account.", success: true });
     } catch (err) {
-        console.log(error);
+        console.log(err);
         return res.status(500).json({ error: "Somthing went wrong, try again later!", success: false });
     }
 }
