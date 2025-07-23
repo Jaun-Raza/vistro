@@ -1,10 +1,10 @@
-// app/product/[productID]/page.tsx (Server Component)
+// app/product/[productID]/page.tsx (Server Component) - Simple version
 import { Metadata } from 'next';
 import { getSingleProduct } from 'app/services/product';
 import ProductDetailClient from './ProductDetailClient';
 
 interface PageProps {
-    params: { productID: string };
+    params: Promise<{ productID: string }>;
 }
 
 function stripMarkdown(text: string): string {
@@ -17,7 +17,8 @@ function stripMarkdown(text: string): string {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     try {
-        const response = await getSingleProduct(params.productID);
+        const { productID } = await params;
+        const response = await getSingleProduct(productID);
         
         if (response.success && response.product) {
             const product = response.product;
@@ -63,11 +64,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function ProductPage({ params }: PageProps) {
+    const { productID } = await params;
+    
     let initialProduct = null;
     let initialError = null;
 
     try {
-        const response = await getSingleProduct(params.productID);
+        const response = await getSingleProduct(productID);
         if (response.success && response.product) {
             initialProduct = response.product;
         } else {
@@ -80,7 +83,7 @@ export default async function ProductPage({ params }: PageProps) {
 
     return (
         <ProductDetailClient 
-            productId={params.productID}
+            productId={productID}
             initialProduct={initialProduct}
             initialError={initialError}
         />
