@@ -591,7 +591,7 @@ const Products = () => {
             <div className="form-group">
               <label>Caption</label>
               <select onChange={(e) => setNewProduct({ ...newProduct, caption: e.target.value })}>
-                <option value="On Sale" selected>Product</option>
+                <option value="Product" selected>Product</option>
                 <option value="On Sale" selected>On Sale</option>
                 <option value="Featured" selected>Featured</option>
               </select>
@@ -729,6 +729,7 @@ const Products = () => {
             <div className="form-group">
               <label>Caption</label>
                <select value={editProductData?.caption} onChange={(e) => setEditProductData({ ...editProductData, caption: e.target.value })}>
+                <option value="Product" selected>Product</option>
                 <option value="On Sale" selected>On Sale</option>
                 <option value="Featured" selected>Featured</option>
               </select>
