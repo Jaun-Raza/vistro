@@ -88,7 +88,7 @@ export async function signUp(req, res) {
         if (isUserNameExisted) return res.status(409).json({ error: 'Username is already taken', success: false });
 
         const message = {
-            from: "'Vistro' <noreply@vistro.shop>",
+            from: "'Vistro.shop' <noreply@vistro.shop>",
             to: email,
             subject: 'SignUp Verification',
             html: `
@@ -97,7 +97,7 @@ export async function signUp(req, res) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SignUp Verification - Vistro</title>
+    <title>SignUp Verification - Vistro.shop</title>
     <style>
         body {
             margin: 0;
@@ -264,11 +264,11 @@ export async function signUp(req, res) {
 <body>
     <div class="email-container">
         <div class="header">
-            <h1 class="logo">VISTRO</h1>
+            <h1 class="logo">Vistro.shop</h1>
         </div>
 
         <div class="content">
-            <h2 class="title">Welcome to Vistro!</h2>
+            <h2 class="title">Welcome to Vistro.shop!</h2>
             <p class="welcome-text">
                 Thank you for joining our community. You're just one step away from getting started.
             </p>
@@ -293,7 +293,7 @@ export async function signUp(req, res) {
             <div class="benefits">
                 <p class="benefits-title">What you get with your verified account:</p>
                 <ul class="benefits-list">
-                    <li>Full access to all Vistro features</li>
+                    <li>Full access to all Vistro.shop features</li>
                     <li>Secure account protection</li>
                     <li>Personalized shopping experience</li>
                     <li>Exclusive offers and updates</li>
@@ -413,7 +413,7 @@ export async function forgotPassChallenge(req, res) {
         foundUser.save();
 
         const message = {
-            from: "'Vistro' <noreply@vistro.shop>",
+            from: "'Vistro.shop' <noreply@vistro.shop>",
             to: email,
             subject: 'OTP For Password Recovery',
             html: `
@@ -422,7 +422,7 @@ export async function forgotPassChallenge(req, res) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OTP For Password Recovery - Vistro</title>
+    <title>OTP For Password Recovery - Vistro.shop</title>
     <style>
         body {
             margin: 0;
@@ -552,7 +552,7 @@ export async function forgotPassChallenge(req, res) {
 <body>
     <div class="email-container">
         <div class="header">
-            <h1 class="logo">VISTRO</h1>
+            <h1 class="logo">Vistro.shop</h1>
         </div>
 
         <div class="content">

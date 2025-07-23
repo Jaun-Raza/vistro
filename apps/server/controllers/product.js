@@ -509,16 +509,16 @@ export async function placeOrder(req, res) {
         user.save();
         
         const message = {
-            from: "'Vistro' <noreply@vistro.shop>",
+            from: "'Vistro.shop' <noreply@vistro.shop>",
             to: user.email,
-            subject: 'Thanks For Ordering From Vistro',
+            subject: 'Thanks For Ordering From Vistro.shop',
             html: `
             <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Confirmation - Vistro</title>
+    <title>Order Confirmation - Vistro.shop</title>
     <style>
         body {
             margin: 0;
@@ -786,7 +786,7 @@ export async function placeOrder(req, res) {
 <body>
     <div class="email-container">
         <div class="header">
-            <h1 class="logo">VISTRO</h1>
+            <h1 class="logo">Vistro.shop</h1>
             <div class="success-badge">Order Confirmed</div>
         </div>
 
@@ -850,7 +850,7 @@ export async function placeOrder(req, res) {
                 <div class="instructions-title">How to access your downloads:</div>
                 <ul>
                     <li>Click the "Go to My Purchases" button above</li>
-                    <li>Log in to your Vistro account</li>
+                    <li>Log in to your Vistro.shop account</li>
                     <li>Navigate to your "Purchased" or "Downloads" page</li>
                     <li>Find your order and download your files</li>
                     <li>Keep your files safe - you can re-download them anytime</li>
