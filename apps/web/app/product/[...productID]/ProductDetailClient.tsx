@@ -5,7 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ShoppingCart, ChevronDown, ChevronUp } from 'lucide-react';
+import { ShoppingCart, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCart } from "../../CartContext";
 import { ToastContainer } from '@/components/Toast';
 import { getSingleProduct } from 'app/services/product';
@@ -92,9 +92,12 @@ export default function ProductDetailClient({
     const [selectedBundles, setSelectedBundles] = useState<SelectedBundles>({});
     const [totalPrice, setTotalPrice] = useState<number>(0);
     const [expandedBundles, setExpandedBundles] = useState<ExpandedBundles>({});
+    const [showAllImages, setShowAllImages] = useState<boolean>(false);
+    const [thumbnailStartIndex, setThumbnailStartIndex] = useState<number>(0);
     const { state, addItem, removeItem } = useCart();
 
-    // Only fetch if we don't have initial data
+    const VISIBLE_THUMBNAILS = 5;
+
     useEffect(() => {
         if (!initialProduct && !initialError && productId) {
             async function fetchProduct(productId: string): Promise<void> {
@@ -128,7 +131,6 @@ export default function ProductDetailClient({
 
             fetchProduct(productId);
         } else if (initialProduct) {
-            // Set up license type for initial data
             const hasPersonalLicense = Boolean(initialProduct.licenses.personal && parseFloat(initialProduct.licenses.personal) > 0);
             const hasCommercialLicense = Boolean(initialProduct.licenses.commercial && parseFloat(initialProduct.licenses.commercial) > 0);
 
@@ -146,11 +148,9 @@ export default function ProductDetailClient({
 
         let price = 0;
 
-        // Convert license price from string to number
         const licensePrice = parseFloat(product.licenses[licenseType]) || 0;
         price = licensePrice;
 
-        // Add selected bundle prices
         Object.keys(selectedBundles).forEach((bundleId: string) => {
             if (selectedBundles[bundleId]) {
                 const bundles = licenseType === "personal"
@@ -159,7 +159,6 @@ export default function ProductDetailClient({
 
                 const bundle = bundles.find((b: ProductBundle) => b.id === bundleId);
                 if (bundle) {
-                    // Convert bundle price from string to number
                     const bundlePrice = parseFloat(bundle.price) || 0;
                     price += bundlePrice;
                 }
@@ -178,7 +177,6 @@ export default function ProductDetailClient({
 
     const handleLicenseChange = (type: LicenseType): void => {
         setLicenseType(type);
-        // Clear bundle selections when changing license type
         setSelectedBundles({});
     };
 
@@ -187,6 +185,17 @@ export default function ProductDetailClient({
             ...prev,
             [bundleId]: !prev[bundleId]
         }));
+    };
+
+    const handleThumbnailPrev = (): void => {
+        setThumbnailStartIndex(prev => Math.max(0, prev - 1));
+    };
+
+    const handleThumbnailNext = (): void => {
+        if (!product) return;
+        setThumbnailStartIndex(prev => 
+            Math.min(product.productDetails.images.length - VISIBLE_THUMBNAILS, prev + 1)
+        );
     };
 
     const handleAddToCart = async (): Promise<void> => {
@@ -218,21 +227,16 @@ export default function ProductDetailClient({
         return (
             <div className="container min-h-screen pt-30 mx-auto py-8 px-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Left Column Skeleton */}
                     <div className="space-y-8">
-                        {/* Image Carousel Skeleton */}
                         <div className="flex flex-row gap-4">
-                            {/* Thumbnail Column Skeleton */}
                             <div className="flex flex-col gap-2">
                                 {[...Array(4)].map((_, index) => (
                                     <div key={index} className="w-16 h-16 bg-gray-700 animate-pulse rounded"></div>
                                 ))}
                             </div>
-                            {/* Main Image Skeleton */}
                             <div className="flex-1 h-96 bg-gray-700 animate-pulse rounded-lg"></div>
                         </div>
 
-                        {/* Bundles Section Skeleton */}
                         <div className="space-y-4">
                             <div className="h-8 bg-gray-700 animate-pulse rounded w-1/2"></div>
                             <div className="grid grid-cols-1 gap-4">
@@ -251,16 +255,13 @@ export default function ProductDetailClient({
                         </div>
                     </div>
 
-                    {/* Right Column Skeleton */}
                     <div className="space-y-6">
-                        {/* Title Skeleton */}
                         <div className="space-y-2">
                             <div className="h-12 bg-gray-700 animate-pulse rounded w-4/5"></div>
                             <div className="h-6 bg-gray-700 animate-pulse rounded w-3/5"></div>
                             <div className="h-6 bg-gray-700 animate-pulse rounded w-24"></div>
                         </div>
 
-                        {/* License Options Skeleton */}
                         <div className="space-y-4">
                             <div className="space-y-2">
                                 <div className="h-6 bg-gray-700 animate-pulse rounded w-2/3"></div>
@@ -269,10 +270,8 @@ export default function ProductDetailClient({
                             <div className="h-8 bg-gray-700 animate-pulse rounded w-1/3"></div>
                         </div>
 
-                        {/* Add to Cart Button Skeleton */}
                         <div className="h-14 bg-gray-700 animate-pulse rounded w-full"></div>
 
-                        {/* Description Skeleton */}
                         <div className="space-y-2">
                             <div className="h-4 bg-gray-700 animate-pulse rounded w-full"></div>
                             <div className="h-4 bg-gray-700 animate-pulse rounded w-5/6"></div>
@@ -300,6 +299,11 @@ export default function ProductDetailClient({
     const hasPersonalLicense: boolean = Boolean(product.licenses.personal && parseFloat(product.licenses.personal) > 0);
     const hasCommercialLicense: boolean = Boolean(product.licenses.commercial && parseFloat(product.licenses.commercial) > 0);
 
+    const totalImages = product.productDetails.images.length;
+    const visibleThumbnails = showAllImages 
+        ? product.productDetails.images.slice(thumbnailStartIndex, thumbnailStartIndex + VISIBLE_THUMBNAILS)
+        : product.productDetails.images.slice(0, VISIBLE_THUMBNAILS);
+
     return (
         <div className="container min-h-screen pt-30 mx-auto py-8 px-4">
             <div className="flex items-center space-x-2 text-3xl px-10 m-10 relative z-10">
@@ -314,30 +318,77 @@ export default function ProductDetailClient({
             <ToastContainer position="top-right" />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Left Column - Images & Bundles */}
                 <div className="space-y-8">
-                    {/* Image Carousel */}
                     <div className="flex flex-row gap-4">
-                        {/* Thumbnail Column */}
-                        <div className="flex flex-col gap-2">
-                            {product.productDetails.images.map((img: string, index: number) => (
-                                <div
-                                    key={index}
-                                    className={`w-16 h-16 cursor-pointer border-2 ${selectedImage === index ? 'border-blue-500' : 'border-gray-200'}`}
-                                    onClick={() => setSelectedImage(index)}
+                        <div className="flex flex-col gap-2 relative">
+                            {showAllImages && thumbnailStartIndex > 0 && (
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={handleThumbnailPrev}
+                                    className="absolute -top-8 left-1/2 transform -translate-x-1/2 z-10 h-6 w-6 p-0 text-white hover:bg-gray-700 hover:text-white cursor-pointer"
                                 >
-                                    <img
-                                        src={img}
-                                        alt={`Product thumbnail ${index + 1}`}
-                                        className="w-full h-full object-cover"
-                                        width={64}
-                                        height={64}
-                                    />
-                                </div>
-                            ))}
+                                    <ChevronUp className="h-4 w-4" />
+                                </Button>
+                            )}
+                            
+                            {visibleThumbnails.map((img: string, index: number) => {
+                                const actualIndex = showAllImages ? thumbnailStartIndex + index : index;
+                                return (
+                                    <div
+                                        key={actualIndex}
+                                        className={`w-16 h-16 cursor-pointer border-2 transition-all duration-200 ${selectedImage === actualIndex ? 'border-blue-500' : 'border-gray-200'}`}
+                                        onClick={() => setSelectedImage(actualIndex)}
+                                    >
+                                        <img
+                                            src={img}
+                                            alt={`Product thumbnail ${actualIndex + 1}`}
+                                            className="w-full h-full object-cover"
+                                            width={64}
+                                            height={64}
+                                        />
+                                    </div>
+                                );
+                            })}
+
+                            {!showAllImages && totalImages > VISIBLE_THUMBNAILS && (
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => setShowAllImages(true)}
+                                    className="bg-transparent w-16 h-16 text-xs text-white border-gray-400 hover:bg-transparent flex flex-col items-center justify-center p-1 cursor-pointer"
+                                >
+                                    <span className="text-[15px] leading-tight text-white">More</span>
+                                    <span className="text-[10px] text-gray-300">+{totalImages - VISIBLE_THUMBNAILS}</span>
+                                </Button>
+                            )}
+
+                            {showAllImages && thumbnailStartIndex + VISIBLE_THUMBNAILS < totalImages && (
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={handleThumbnailNext}
+                                    className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 z-10 h-6 w-6 p-0 text-white hover:bg-gray-700 hover:text-white cursor-pointer"
+                                >
+                                    <ChevronDown className="h-4 w-4" />
+                                </Button>
+                            )}
+
+                            {showAllImages && (
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => {
+                                        setShowAllImages(false);
+                                        setThumbnailStartIndex(0);
+                                    }}
+                                    className="bg-transparent w-16 h-8 text-xs text-white border-gray-400 hover:bg-transparent hover:text-white cursor-pointer mt-2"
+                                >
+                                    Show Less
+                                </Button>
+                            )}
                         </div>
 
-                        {/* Main Image */}
                         <div className="flex-1">
                             <img
                                 src={product.productDetails.images[selectedImage] || '/placeholder.jpg'}
@@ -349,7 +400,6 @@ export default function ProductDetailClient({
                         </div>
                     </div>
 
-                    {/* Bundles Section */}
                     {activeBundles.length > 0 && (
                         <div className="space-y-4">
                             <h3 className="text-3xl font-bold text-white">
@@ -407,7 +457,6 @@ export default function ProductDetailClient({
                                                     </div>
                                                 </div>
 
-                                                {/* Bundle Description */}
                                                 {expandedBundles[bundle.id] && bundle.description && (
                                                     <div className="mt-4 pl-20">
                                                         <div className="prose prose-invert max-w-none">
@@ -424,14 +473,12 @@ export default function ProductDetailClient({
                     )}
                 </div>
 
-                {/* Right Column - Product Details */}
                 <div className="space-y-6">
                     <div>
                         <h1 className="text-6xl font-bold text-white">{product.productDetails.name}</h1>
                         <p className="text-xl text-gray-300 mt-1">{product.productDetails.tagline}</p>
                     </div>
 
-                    {/* License Options */}
                     <div className="space-y-4">
                         <div className="flex flex-col gap-2">
                             {hasPersonalLicense && (
@@ -462,7 +509,6 @@ export default function ProductDetailClient({
                         <div className="text-2xl font-bold mt-2 text-white">Total: £{totalPrice.toFixed(2)}</div>
                     </div>
 
-                    {/* Add to Cart Button */}
                     <Button
                         onClick={handleAddToCart}
                         disabled={!hasPersonalLicense && !hasCommercialLicense}
@@ -472,7 +518,6 @@ export default function ProductDetailClient({
                         Add to Cart
                     </Button>
 
-                    {/* Product Description */}
                     <div>
                         <div className="prose prose-invert max-w-none text-gray-100 rounded-lg p-4 text-center whitespace-pre-line text-2xl">
                             <ReactMarkdown>{product.productDetails.description}</ReactMarkdown>

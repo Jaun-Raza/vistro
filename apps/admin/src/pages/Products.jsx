@@ -486,15 +486,13 @@ const Products = () => {
                       <td>£{product.licenses.personal}</td>
                       <td>£{product.licenses.commercial}</td>
                       <td>
-                        {product?.productDetails?.images?.length || 0} / 5 Images
-                        {(product?.productDetails?.images?.length || 0) < 5 && (
-                          <button
+                        {product?.productDetails?.images?.length || 0} Images
+                        <button
                             className="add-img"
                             onClick={() => openImageUploadForm(product.productId)}
                           >
                             +
                           </button>
-                        )}
                       </td>
                       <td>
                         {product.bundlesPersonal.length + product.bundlesCommercial.length} Bundles

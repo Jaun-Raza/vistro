@@ -1,0 +1,16 @@
+name: Ping Google with Sitemap
+
+on:
+  push:
+    branches: [main]  
+  workflow_dispatch:  
+
+jobs:
+  ping-sitemap:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ping Google with sitemap
+        run: |
+          curl "https://www.google.com/ping?sitemap=https://vistro.shop/sitemap.xml"
+          curl "https://www.bing.com/ping?sitemap=https://vistro.shop/sitemap.xml"

@@ -15,11 +15,11 @@ const Reviews = () => {
     reviewText: '',
   });
 
-  const { data, isLoading, isError } = useReviewsDataQuery(page);
+  const { data, isLoading, isError, error } = useReviewsDataQuery(page);
   const [removeReview] = useRemoveReviewMutation();
   const [addReview] = useAddReviewMutation();
 
-  if (isLoading || isError) {
+  if (isLoading) {
     return <Loader />;
   }
 
@@ -48,7 +48,7 @@ const Reviews = () => {
 
   function submitNewReview(e) {
     e.preventDefault();
-    
+
     addReview(formData).then(response => {
       if (!response.error) {
         setShowCreatePopup(false);
@@ -57,7 +57,7 @@ const Reviews = () => {
         alert('Error creating review. Please try again.');
       }
     });
-  
+
     setShowCreatePopup(false);
   }
 
@@ -66,16 +66,12 @@ const Reviews = () => {
   function removeReviewFunc(reviewId) {
     removeReview({ reviewId }).then(response => {
       if (!response.error) {
-       window.location.reload()
+        window.location.reload()
       } else {
         alert('Something went wrong, try again!');
       }
     });
-    
-  }
 
-  if (isLoading || isError) {
-    return <Loader />;
   }
 
   // Render star rating
@@ -99,7 +95,7 @@ const Reviews = () => {
           <div className="cards">
             <div className="card" style={{ backgroundColor: '#434ce6', color: '#fff' }}>
               <h3>Total Reviews <i className='fa fa-star'></i></h3>
-              <span>{data?.data?.fullLength} {data?.data?.fullLength > 1 ? 'Reviews' : 'Review'}</span>
+              <span>{data?.data?.fullLength || 0} {data?.data?.fullLength > 1 ? 'Reviews' : 'Review'}</span>
             </div>
           </div>
           <button className="create-btn" onClick={handleCreateReview}>
@@ -135,28 +131,30 @@ const Reviews = () => {
                 <th>Actions</th>
               </tr>
             </thead>
-            <tbody>
-              {
-                data?.data?.reviews?.map((review) => {
-                  return <tr key={review.reviewId}>
-                    <td>{review.author}</td>
-                    <td className="rating-stars">{renderStars(review.rating)}</td>
-                    <td>{review?.createdAt?.slice(0, 10)}</td>
-                    <td>
-                      <button className='detailsBtn' onClick={() => {
-                        viewDetail({
-                          customerName: review.author,
-                          rating: review.rating,
-                          reviewText: review.review,
-                          submittedAt: review?.createdAt?.slice(0, 10)
-                        });
-                      }}>View</button>
-                      <button className='removeBtn' onClick={() => removeReviewFunc(review.reviewId)}>Delete</button>
-                    </td>
-                  </tr>
-                })
-              }
-            </tbody>
+            {
+              !isError ? <><tbody>
+                {
+                  data?.data?.reviews?.map((review) => {
+                    return <tr key={review.reviewId}>
+                      <td>{review.author}</td>
+                      <td className="rating-stars">{renderStars(review.rating)}</td>
+                      <td>{review?.createdAt?.slice(0, 10)}</td>
+                      <td>
+                        <button className='detailsBtn' onClick={() => {
+                          viewDetail({
+                            customerName: review.author,
+                            rating: review.rating,
+                            reviewText: review.review,
+                            submittedAt: review?.createdAt?.slice(0, 10)
+                          });
+                        }}>View</button>
+                        <button className='removeBtn' onClick={() => removeReviewFunc(review.reviewId)}>Delete</button>
+                      </td>
+                    </tr>
+                  })
+                }
+              </tbody></> : <><h3>{error?.data?.error}</h3></>
+            }
           </table>
         </div>
       </div>
@@ -177,19 +175,19 @@ const Reviews = () => {
             <form onSubmit={submitNewReview}>
               <div className="form-group">
                 <label>Customer Name:</label>
-                <input 
-                  type="text" 
-                  name="customerName" 
-                  value={formData.customerName} 
+                <input
+                  type="text"
+                  name="customerName"
+                  value={formData.customerName}
                   onChange={handleInputChange}
                   required
                 />
               </div>
               <div className="form-group">
                 <label>Rating:</label>
-                <select 
-                  name="rating" 
-                  value={formData.rating} 
+                <select
+                  name="rating"
+                  value={formData.rating}
                   onChange={handleInputChange}
                 >
                   <option value="1">1 Star</option>
@@ -201,9 +199,9 @@ const Reviews = () => {
               </div>
               <div className="form-group">
                 <label>Review:</label>
-                <textarea 
-                  name="reviewText" 
-                  value={formData.reviewText} 
+                <textarea
+                  name="reviewText"
+                  value={formData.reviewText}
                   onChange={handleInputChange}
                   required
                   rows="4"

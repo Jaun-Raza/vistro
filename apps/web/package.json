@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack --port 3000",
+    "postbuild": "next-sitemap",
     "build": "next build",
     "start": "next start",
     "lint": "next lint --max-warnings 0",
@@ -31,6 +32,7 @@
     "lucide-react": "^0.492.0",
     "motion": "^12.8.0",
     "next": "^15.3.0",
+    "next-sitemap": "^4.2.3",
     "postcss": "^8.5.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

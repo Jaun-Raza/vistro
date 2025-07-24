@@ -6,7 +6,7 @@ import { User } from '../models/user.js';
 import "dotenv/config.js";
 
 export async function getAdminReviews(req, res) {
-    const { page, limit = 10 } = req.body;
+    const { page, limit = 10 } = req.query;
 
     try {
         const reviews = await Review.find({}).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit);
@@ -274,10 +274,6 @@ export async function addImageToProduct(req, res) {
 
         if (!product) {
             return res.status(404).json({ error: "Product Not Found", success: false });
-        }
-
-        if (product.productDetails.images.length === 5) {
-            return res.status(400).json({ error: "Only 5 images can be upload in a single product.", success: false });
         }
 
         let productImagesArray = [...product.productDetails.images, imageUrl];
